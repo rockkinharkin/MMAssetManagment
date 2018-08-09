@@ -1,2 +1,2 @@
-Asset Managment System
+Asset Management System
 ========================
