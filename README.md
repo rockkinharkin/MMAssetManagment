@@ -1,4 +1,2 @@
-HandyHR
-=======
-
-HR management system
+Asset Managment System
+========================
