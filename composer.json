@@ -1,0 +1,7 @@
+{
+    "require": {
+        "aws/aws-sdk-php": "3.*",
+        "symfony/event-dispatcher": "^3.4",
+        "monolog/monolog": "^1.23"
+    }
+}

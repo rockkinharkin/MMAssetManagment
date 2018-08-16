@@ -1,0 +1,9 @@
+.grid-container {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 4em 4em 4em 4em;
+  grid-template-rows: 4em 4em 4em 4em;
+  grid-gap: 1px 1px;
+  grid-template-areas: ". . . ." ". . . ." ". . . ." ". . . .";
+}
+
