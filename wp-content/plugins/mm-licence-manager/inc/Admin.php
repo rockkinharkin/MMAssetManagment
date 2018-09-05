@@ -21,6 +21,7 @@ class Assets_Manager_Admin {
 	 * Registers WordPress actions
 	 */
 	private function hooks() {
+
 		add_action( 'add_meta_boxes', array( $this, 'assets_manager_register_meta_box' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_scripts' ) );
 	}

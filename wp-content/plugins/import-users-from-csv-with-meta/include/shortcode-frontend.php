@@ -2,7 +2,7 @@
 add_shortcode( 'import-users-from-csv-with-meta', 'acui_frontend' );
 function acui_frontend() {
 	ob_start();
-
+	
 	if( !current_user_can( 'create_users' ) )
 		die( __( 'Only users who are able to create users can manage this form.', 'import-users-from-csv-with-meta' ) );
 

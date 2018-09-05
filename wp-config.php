@@ -20,7 +20,8 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'library_makematic');
+//define('DB_NAME', 'library_makematic');
+define('DB_NAME', 'mm_assetmanager');
 
 /** MySQL database username */
 define('DB_USER', 'bn_wordpress');
@@ -35,7 +36,7 @@ define('DB_HOST', '127.0.0.1');
 define('DB_CHARSET', 'utf8');
 
 /** The Database Collate type. Don't change this if in doubt. */
-define('DB_COLLATE', '');
+define('DB_COLLATE', 'utf8_general_ci');
 
 /**#@+
  * Authentication Unique Keys and Salts.
@@ -78,6 +79,7 @@ $table_prefix  = 'wp_';
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
 define('WP_DEBUG', true);
+define('WP_DEBUG_LOG', true);
 
 /* That's all, stop editing! Happy blogging. */
 /**
@@ -89,11 +91,11 @@ define('WP_DEBUG', true);
 */
 
 if ( defined( 'WP_CLI' ) ) {
-    $_SERVER['HTTP_HOST'] = 'localhost';
+    $_SERVER['HTTP_HOST'] = 'learning.makematic.local';
 }
 
-define('WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . '/wordpress');
-define('WP_HOME', 'http://' . $_SERVER['HTTP_HOST'] . '/wordpress');
+define('WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . '/');
+define('WP_HOME', 'http://' . $_SERVER['HTTP_HOST'] . '/');
 
 
 /** Absolute path to the WordPress directory. */
@@ -124,9 +126,3 @@ if ( !defined( 'WP_CLI' ) ) {
 }
 
 // Amazon s3 connection
-define('AWS_CONFIG', array( 'key'=>"AKIAIRYJVAG24ZMBKGAQ ",
-                            'secret'=>"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",
-                            'bucket'=>"courses.makematic.com",
-                            'region'=>"eu-west-1"
-                          )
-        );

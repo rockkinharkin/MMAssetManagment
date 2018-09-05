@@ -4,7 +4,7 @@ Donate link: http://paypal.me/codection
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
 Tested up to: 4.9.8
-Stable tag: 1.11.3.7
+Stable tag: 1.11.3.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,6 +70,14 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
+
+= 1.11.3.8.1 =
+*	Fixed bug thanks to @xenator for discovering the bug (https://wordpress.org/support/topic/uncaught-error-while-importing-users/#post-10618130)
+
+= 1.11.3.8 =
+*	Fixed mail sending in frontend import
+*	Now you can activate users with WP Members in frontend import
+*	Some fixes and warnings added
 
 = 1.11.3.7 =
 *	Fixes and improvements thanks to @malcolm-oph

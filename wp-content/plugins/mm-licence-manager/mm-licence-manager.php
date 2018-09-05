@@ -1,20 +1,19 @@
 <?php
 /*
-	Plugin Name: MAKEMATIC Licence Manager for WordPress
+	Plugin Name: MAKEMATIC Asset Licence Manager
 	Plugin URI: https://www.makematic.com/staff/assets-manager
-	Description: An asset and licence management system for makematic clients
+	Description: A bespoke asset and licence management system for MAKEMATIC
 	Version: 1.0
 	Author: Rachael Harkin
-	Author URI: http://www.hybrid.digital
-	Text Domain: assets-manager
+	Author URI: http://hybrid.digital
+	Text Domain: asset-licence-manager
 	License: GPL3
 */
 
 //$mm_licence_manager = new WP_Assets_Manager();
-$mm_licence_manager = new MM_Licence_Manager();
+$mm_licence_manager = new MM_Asset_Licence_Manager();
 
-class MM_Licence_Manager {
-	private $Licence_Manager_Asset_Type;
+class MM_Asset_Licence_Manager {
 
 	/*
 	 * Assets Manager class construct
@@ -22,16 +21,47 @@ class MM_Licence_Manager {
 	public function __construct() {
 		$this->include_dependencies();
 		$this->setup();
-		$this->teardown();
 		$this->instantiate_components();
+		$this->teardown();
 	}
 
-	/**
-	 * Runs essential pieces of plugin to run within WordPress
-	 */
-	public function init() {
-		$this->hooks();
+	public function install() {
+	 global $wpdb;
+
+	 //setting up tablenames
+	 $tn_customers = $wpdb->prefix."mmlm_customers";
+	 $tn_licences = $wpdb->prefix."mmlm_licences";
+
+	$charset_collate = $wpdb->get_charset_collate();
+
+	 $sql = "CREATE TABLE $tn_customers (
+		  id mediumint(9) NOT NULL AUTO_INCREMENT,
+		  parent_id mediumint(9) NOT NULL,
+			time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		  name TEXT NULL,
+		  address VARCHAR(500) NULL,
+			phone		VARCHAR(200) NULL,
+			{$wpdb->prefix}user_id BIGINT(20),
+		  PRIMARY KEY(id)
+		) $charset_collate;";
+
+
+	$sql .= "CREATE TABLE $tn_licences (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		licence_key VARCHAR(200) NOT NULL,
+		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		{$wpdb->prefix}user_id BIGINT(20),
+		{$wpdb->prefix}post_id BIGINT(20),
+		{$wpdb->prefix}mmlm_customer_id BIGINT(20),
+		PRIMARY KEY(id)
+	) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+
+		add_option( "mmlm_db_version", "1.0" );
 	}
+
 
 	/**
 	 * Include all dependencies
@@ -57,6 +87,7 @@ class MM_Licence_Manager {
 */
 	public function setup() {
 		register_activation_hook( __FILE__, array( $this, 'mm_licence_manager_activate' ) );
+		register_activation_hook( __FILE__, array( $this,'install' ) );
 	}
 
 	/**
@@ -71,13 +102,14 @@ class MM_Licence_Manager {
 	 */
 	public function instantiate_components() {
 		/** rh menu **/
-		/**$MMLM_Admin_Menu =  new MMLM_Admin_Menu();
-		add_action('admin_menu', $MMLM_Admin_Menu->mm_admin_menu() );**/
+		///$MMLM_Admin_Menu =  new MMLM_Admin_Menu();
+		//add_action('admin_menu', $MMLM_Admin_Menu->mm_admin_menu() );
 
 		/**=== Licences ===**/
 		$MMLM_LicencePostType = new MM_Licence_Manager_Post_Type();
 		$MMLM_LicencePostType->init();
 
+		//shortcodes
 		$scLoadAssets = new scLoadAssets();
 		$scLoadAssets->init();
 
@@ -110,7 +142,7 @@ class MM_Licence_Manager {
 	/**
 	 * Run this on plugin activation
 	 */
-	public function wp_assets_manager_activate() {
+	public function mm_licence_manager_activate() {
 		Assets_Manager_Log_Assets_Access::create_log_table();
 		$this->create_asset_post_type();
 	}
@@ -127,7 +159,23 @@ class MM_Licence_Manager {
 	/**
 	 * Clean up after deactivation
 	 */
-	public function wp_assets_manager_deactivate() {
+	public function mm_licence_manager_deactivate() {
 		flush_rewrite_rules();
+	}
+
+	public function mm_licence_manager_uninstall(){
+		register_uninstall_hook( __FILE__, array( $this,'uninstall' ) );
+	}
+
+	public function uninstall () {
+	   global $wpdb;
+
+	  delete_option( "mmlm_db_version" );
+
+	  if( isset( $wpdb ) ){
+	    $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}mmlm_customers,
+	                                        {$wpdb->prefix}mmlm_content,
+	                                        {$wpdb->prefix}mmlm_content");
+	  }
 	}
 }

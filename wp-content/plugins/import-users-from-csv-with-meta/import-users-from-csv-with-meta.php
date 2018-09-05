@@ -3,7 +3,7 @@
 Plugin Name:	Import users from CSV with meta
 Plugin URI:		https://www.codection.com
 Description:	This plugins allows to import users using CSV files to WP database automatically
-Version:		1.11.3.7
+Version:		1.11.3.8.1
 Author:			codection
 Author URI: 	https://codection.com
 License:     	GPL2
@@ -72,7 +72,6 @@ function acui_loader(){
 
 function acui_init(){
 	load_plugin_textdomain( 'import-users-from-csv-with-meta', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
-
 	acui_activate();
 }
 
@@ -384,7 +383,7 @@ function acui_fileupload_process( $form_data, $is_cron = false, $is_frontend  = 
 			$attach_data = wp_generate_attachment_metadata( $attach_id, $filedest );
 			wp_update_attachment_metadata( $attach_id,  $attach_data );
 			
-			acui_import_users( $filedest, $form_data, $attach_id, $is_cron );
+			acui_import_users( $filedest, $form_data, $attach_id, $is_cron, $is_frontend );
 		  }
 		}
 	  }
@@ -402,9 +401,9 @@ function acui_manage_frontend_process( $form_data ){
 	else
 		update_option( "acui_frontend_send_mail_updated", false );
 
-	update_option( "acui_frontend_role", $form_data["role-frontend"] );
+	update_option( "acui_frontend_activate_users_wp_members", $form_data["activate_users_wp_members"] );
+	update_option( "acui_frontend_role", $form_data["acui_frontend_role"] );
 	?>
-
 	<div class="updated">
        <p><?php _e( 'Settings updated correctly', 'import-users-from-csv-with-meta' ) ?></p>
     </div>

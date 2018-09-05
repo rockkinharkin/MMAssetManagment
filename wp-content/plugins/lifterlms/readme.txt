@@ -1,11 +1,11 @@
 === LifterLMS ===
-Contributors: thomasplevy, chrisbadgett, kathy11, lifterlms, codeboxllc
+Contributors: thomasplevy, chrisbadgett, saurabhshukla, lifterlms, codeboxllc
 Donate link: https://lifterlms.com
 Tags: learning management system, LMS, membership, elearning, online courses, quizzes, sell courses, badges, gamification, learning, Lifter, LifterLMS
 Requires at least: 4.8
-Requires PHP: 5.6
+Requires PHP: 7.2
 Tested up to: 4.9.8
-Stable tag: 3.22.1
+Stable tag: 3.23.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -355,6 +355,50 @@ Be sure you’ve taken the free tutorial training video course: [How to Create a
 == Changelog ==
 
 
+= v3.23.0 - 2018-08-27 =
+------------------------
+
+##### Access Plan & Pricing Table Template Improvements
+
++ The pricing table template has been split into multiple templates which are now rendered via action hooks. No visual changes have been made but if you've customized the template using a template override you'll want to review the template changes before updating!
++ New action hooks are available to modify the rendering of access plans in course / membership pricing tables.
+
+  + `llms_access_plan`: Main hook for outputting an entire access plan within the pricing table
+  + `llms_before_access_plan`: Called before main content of access plan. Outputs the "Featured" area of plans
+  + `llms_acces_plan_content`: Main access plan content. Outputs title, pricing info, restrictions, and description
+  + `llms_acces_plan_footer`: Called after main content. Outputs trial info and the checkout / enrollment button
+
++ Added filters to the returns of many of the functions in the `LLMS_Acces_Plan` model.
++ Minor improvements made to `LLMS_Access_Plan` model
+
+##### Updates and Enhancements
+
++ Improved handling of empty blank / empty data when adding instructors to courses and memberships
++ Added filters to the "Sales Page Content" type options & functions for courses and memberships to allow 3rd parties to define their own type of sales page functionality
++ Added filters to the saving of access plan data
++ Improved the HTML and added CSS classes to the access plan admin panel html view
+
+##### Bug Fixes
+
++ Fixes issue causing the "Preview Changes" button on courses to lock the "Update" publishing button which prevents changes from being properly saved.gi
++ Fixed issue causing PHP errors when viewing courses / memberships on the admin panel when an instructor user was deleted
++ Fixed issue causing PHP notices when viewing course / membership post lists on the admin panel when an instructor user was deleted
++ Fixed issue causing PHP warnings to be generated when viewing the user add / edit screen on the admin panel
++ Fixed an issue which would cause access plans to never be available to users. *This bug didn't affect any existing installations except if you wrote custom code that called the `LLMS_Access_Plan::is_available_to_user()` method.*
+
+##### Template Updates
+
++ [templates/admin/post-types/product-access-plan.php](https://github.com/gocodebox/lifterlms/blob/master/templates/admin/post-types/product-access-plan.php)
++ [templates/product/pricing-table.php](https://github.com/gocodebox/lifterlms/blob/master/templates/product/pricing-table.php)
+
+
+= v3.22.2 - 2018-08-13 =
+------------------------
+
++ Fixed issue causing banners on general settings screen to cause a fatal error when api connection errors occurred
++ Improved CSS on setup wizard
+
+
 = v3.22.1 - 2018-08-06 =
 ------------------------
 
@@ -461,39 +505,6 @@ Be sure you’ve taken the free tutorial training video course: [How to Create a
 + Fixed issue causing admin panel static assets to have a double slash (//) in the assest URI path
 + FIxed issue allowing users with `view_lifterlms_reports` capability (Instructors) to access sales & enrollment reporting screens. The `view_others_lifterlms_reports` capability (Admins & LMS Managers) is now required to view these reporting tabs.
 + Updated IDs of login and registration nonces to be unique. Fixes an issue causing Chrome to throw non-unique ID warnings in the developer console. Also, IDs are supposed to be unique _anyway_ but thanks for helping us out Google.
-
-
-= v3.19.3 - 2018-06-14 =
-------------------------
-
-+ Fix issue causing new quizzes to be unable to load questions list without reloading the builder
-
-
-= v3.19.2 - 2018-06-14 =
-------------------------
-
-##### Updates and enhancements
-
-+ The course builder will now load quiz question data when the quiz is opened instead of loading all quizzes on builder page load. Improves builder load times and addresses an issue which could cause timeouts in certain environments when attempting to edit very large courses.
-+ The currently viewed lesson will now be bold in the lesson outline widget.
-+ Added a CSS class `.llms-widget-syllabus .llms-lesson.current-lesson` which can be used to customize the display of the current lesson in the widget.
-+ Added the ability to filter quiz attempt reports by quiz status
-+ Updated language for access plans on with a limited number of payments to reflect the total number of payments due as opposed to the length (for example in years) that the plan will run.
-
-##### Bug fixes
-
-+ Fixed issue preventing oEmbed media from being used in quiz question descriptions
-+ Fixed issue preventing `<iframes>` from being used in quiz question descriptions
-+ Quiz results will now exclude questions with 0 points value when displaying the number of questions in the quiz.
-+ Fixed error occurring when sorting was applied to quiz attempt reports which would cause quiz attempts from other quizzes to be included in the new sorted report
-+ Fixed filter `lifterlms_reviews_section_title` which was unuseable due to the incorrect usage of `_e()` within the filter. Now using `__()` as expected.
-+ Fixed issue causing course featured image to display in place of lesson feature images
-
-##### Template Updates
-
-+ [templates/course/lesson-preview.php](https://github.com/gocodebox/lifterlms/blob/master/templates/course/lesson-preview.php)
-+ [templates/course/outline-list-small.php](https://github.com/gocodebox/lifterlms/blob/master/templates/course/outline-list-small.php)
-+ [templates/quiz/results-attempt.php](https://github.com/gocodebox/lifterlms/blob/master/templates/quiz/results-attempt.php)
 
 
 [View the full changelog](https://github.com/gocodebox/lifterlms/blob/master/CHANGELOG.md#lifterlms-changelog)
