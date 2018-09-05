@@ -126,3 +126,5 @@ if ( !defined( 'WP_CLI' ) ) {
 }
 
 // Amazon s3 connection
+define('ACCESSID', "AKIAI5AA4NJX4637VFRA");
+define('LONGPASS', "spX6bZk8Sz5thn8y88vGbeW7iUSAbFmgvH/15rhZ");
