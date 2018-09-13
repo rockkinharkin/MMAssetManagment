@@ -4,3 +4,6 @@
 */cache/*
 */cache/!index.html
 wp-config.php
+wp-config-bitnami.php
+.htaccess
+code.php

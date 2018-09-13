@@ -25,43 +25,6 @@ class WP_Assets_Manager {
 		$this->instantiate_components();
 	}
 
-	public function install() {
-	 global $wpdb;
-
-	 //setting up tablenames
-	// $tn_customers = $wpdb->prefix."mmam_customers";
-	 $tn_licences = $wpdb->prefix."mmam_licences";
-
-	$charset_collate = $wpdb->get_charset_collate();
-
-	 /* $sql = "CREATE TABLE $tn_customers (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			parent_id mediumint(9) NOT NULL,
-			time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-			name TEXT NULL,
-			address VARCHAR(500) NULL,
-			phone		VARCHAR(200) NULL,
-			{$wpdb->prefix}user_id BIGINT(20),
-			PRIMARY KEY(id)
-		) $charset_collate;";*/
-
-
-	$sql .= "CREATE TABLE $tn_licences (
-		id mediumint(9) NOT NULL AUTO_INCREMENT,
-		licence_key VARCHAR(200) NOT NULL,
-		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-		{$wpdb->prefix}user_id BIGINT(20),
-		{$wpdb->prefix}post_id BIGINT(20),
-		{$wpdb->prefix}mmlm_customer_id BIGINT(20),
-		PRIMARY KEY(id)
-	) $charset_collate;";
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $sql );
-
-		add_option( "mmlm_db_version", "1.0" );
-	}
-
 	/**
 	 * Include all dependencies
 	 */
@@ -69,8 +32,8 @@ class WP_Assets_Manager {
 		// rh appended
 		require ABSPATH.'/vendor/autoload.php';
 		require_once 'inc/AWS_Resources.php';
-		require_once 'inc/Shortcodes.php';
-		require_once 'inc/Licence_Post_Type.php';
+		//require_once 'inc/Shortcodes.php';
+		//require_once 'inc/Licence_Post_Type.php';
 		// original
 		require_once 'inc/Asset.php';
 		require_once 'inc/Log_Assets_Access.php';
@@ -104,12 +67,12 @@ class WP_Assets_Manager {
 	public function instantiate_components() {
 		// rh additions
 		/**=== Licences ===**/
-		$MMLM_LicencePostType = new MM_Licence_Manager_Post_Type();
-		$MMLM_LicencePostType->init();
+	//	$MMLM_LicencePostType = new MM_Licence_Manager_Post_Type();
+	//	$MMLM_LicencePostType->init();
 
 		//shortcodes
-		$scLoadAssets = new scLoadAssets();
-		$scLoadAssets->init();
+	//	$scLoadAssets = new scLoadAssets();
+	//	$scLoadAssets->init();
 
 		$Log_Assets_Access = new Assets_Manager_Log_Assets_Access();
 		$Log_Assets_Access->init();
@@ -175,4 +138,41 @@ class WP_Assets_Manager {
 	                                        {$wpdb->prefix}mmlm_content");
 	  }
 	}
+
+	/**public function install() {
+	 global $wpdb;
+
+	 //setting up tablenames
+	// $tn_customers = $wpdb->prefix."mmam_customers";
+	 $tn_licences = $wpdb->prefix."mmam_licences";
+
+	$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE $tn_customers (
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			parent_id mediumint(9) NOT NULL,
+			time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+			name TEXT NULL,
+			address VARCHAR(500) NULL,
+			phone		VARCHAR(200) NULL,
+			{$wpdb->prefix}user_id BIGINT(20),
+			PRIMARY KEY(id)
+		) $charset_collate;";
+
+
+	$sql .= "CREATE TABLE $tn_licences (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		licence_key VARCHAR(200) NOT NULL,
+		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		{$wpdb->prefix}user_id BIGINT(20),
+		{$wpdb->prefix}post_id BIGINT(20),
+		{$wpdb->prefix}mmlm_customer_id BIGINT(20),
+		PRIMARY KEY(id)
+	) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+
+		add_option( "mmlm_db_version", "1.0" );
+	}**/
 }
