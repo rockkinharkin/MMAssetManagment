@@ -73,7 +73,7 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
             echo $args['before_title'] . $title . $args['after_title'];
 
           //  need to check for licence here also.
-          if( $membership['has_membership'] == 'yes'){
+          if( $membership['_has_membership'] == 'yes'){
             // before and after widget arguments are defined by themes
 
           $content .= '<div class="mm-container">';
