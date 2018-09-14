@@ -13,8 +13,8 @@
 	License: GPL3
 */
 
-//defined( 'ABSPATH' ) || exit;
-//if (  is_plugin_active( ABSPATH.'wp-content/plugins/lifterlms/lifterlms.php' ) ) {
+defined( 'ABSPATH' ) || exit;
+if (  is_plugin_active( ABSPATH.'wp-content/plugins/lifterlms/lifterlms.php' ) ) {
 
 
 // /**
@@ -41,7 +41,7 @@ function build_course_assets_meta_box( $post ){
                 <span class="toggle-indicator" aria-hidden="true"></span>
                 </button>
                       <div class="llms-builder-launcher">
-			                     <a class="llms-button-primary full" href="http://'.WP_SITEURL.'wp-admin/admin.php?page=llms-link-assets&amp;course_id="'.$post->ID.'>Attach Assets</a>
+			                     <a class="llms-button-primary full" href="http://'.WP_SITEURL.'wp-admin/admin.php?page=llms-link-assets&amp;course_id='.$post->ID.'">Attach Assets</a>
 	                     </div>
 		            </div>';
   }
@@ -55,5 +55,5 @@ function build_course_assets_meta_box( $post ){
   }
 
   add_action( 'save_post', 'wpdocs_save_meta_box' );
-//}
+}
 ?>

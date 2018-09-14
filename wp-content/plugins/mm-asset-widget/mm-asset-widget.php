@@ -24,7 +24,7 @@ require 'inc\aws-resources.php';
 class MM_Asset_Widget extends WP_Widget {
 
   function __construct() {
-    $this->s3ResUrl   = 'http://courses.makematic.com/';
+    $this->s3ResUrl   = 'http://'.BUCKURL;
     $this->audioSubDir  = '/audio/';
     $this->imgSubDir  = '/images/';
     $this->docsSubDir  = '/docs/';
@@ -188,20 +188,19 @@ class MM_Asset_Widget extends WP_Widget {
     foreach ( $s3FileList as $a ){
       $meta = $this->buildAssetMeta($a);
 
-
-      // if the 'Key' string contains asset->ID and 'video' and file types mp4,oog
-      if( ( strpos($meta->full_path, "mp4") !== false ) &&
-          ( $meta->asset_id == $wpasset->ID ) ){
+      // if the 'Key' string contains asset->ID and 'video' and file types mp4,oog,webM
+      if( ( ( strpos($meta->full_path, "mp4") !== false ) || ( strpos($meta->full_path, "ogg") !== false ) || ( strpos($meta->full_path, "webM") !== false ) )
+       && ( $meta->asset_id == $wpasset->ID ) ){
 
             if( strpos( $meta->file,'mp4') !== false ){ $type ='mp4'; }
-            if( strpos( $meta->file,'mp4') !== false ){ $type ='ogg'; }
+            if( strpos( $meta->file,'ogg') !== false ){ $type ='ogg'; }
+            if( strpos( $meta->file,'webM') !== false ){ $type ='webM'; }
 
             $list .= '<h5>'.$meta->display_fileName.'</h5>
                 <textarea id="video-'.$wpasset->ID.'">
                   <video width="320" height="240" controls>
-                  <source src="'.$meta->fullpath_without_file_extension.'" type="video/"'.$type.'>
-                  <source src="'.$meta->fullpath_without_file_extension.'.ogg" type="video/"'.$type.'>
-                  Your browser does not support the video tag.
+                  <source src="'.BUCKURL.'/'.$meta->fullpath_without_file_extension.'.'.$type.'" type="video/'.$type.'">
+                  Your browser does not support the video tag. Please find the correct browser for support of this video tag here: https://www.w3schools.com/html/html5_video.asp
                   </video>
                 </textarea>';
       }

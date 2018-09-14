@@ -5,9 +5,9 @@ use Aws\S3\Exception\S3Exception;
 class AWS_GetResources{
   public function __construct(){
     global $wp;
-    $this->s3Key = "AKIAIX577NGXJQAJOWXQ";
-    $this->s3Secret = "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";
-    $this->bucket = 'courses.makematic.com';
+    $this->s3Key = ACCESSID;
+    $this->s3Secret = LONGPASS;
+    $this->bucket = BUCKNAME;
     $this->s3 = new S3Client( [ 'version' => 'latest',
                                 'region' => 'eu-west-1',
                                 'credentials' => [ 'key' => $this->s3Key ,'secret' =>$this->s3Secret ]
