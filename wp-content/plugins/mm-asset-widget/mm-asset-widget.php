@@ -63,30 +63,33 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
       $wpasset->assetDir = $wpasset->ID.'_'.$wpasset->post_name;
 
       $title = apply_filters( 'widget_title', $instance['title'] );
+      echo $args['before_widget'];
 
       if( is_user_logged_in() ){
-      $memberships = new MM_Assets_LLMS_Memberships();
-      $membership = $memberships->UserHasMembership( get_current_user_id() );
+        $memberships = new MM_Assets_LLMS_Memberships();
+        $membership = $memberships->UserHasMembership( get_current_user_id() );
 
-        //  need to check for licence here also.
+          if ( ! empty( $title ) )
+            echo $args['before_title'] . $title . $args['after_title'];
 
-        // before and after widget arguments are defined by themes
-        echo $args['before_widget'];
-        if ( ! empty( $title ) )
-        echo $args['before_title'] . $title . $args['after_title'];
+          //  need to check for licence here also.
+          if( $membership['has_membership'] == 'yes'){
+            // before and after widget arguments are defined by themes
 
-        print_r($membership);
+          $content .= '<div class="mm-container">';
+          $content .= $this->buildVideoList($wpasset);
+          $content .= $this->buildAudioList($wpasset);
+          $content .= $this->buildImageList($wpasset);
+          $content .= $this->buildDocsList($wpasset);
+          $content .= '</div>';
 
-        $content .= '<div class="mm-container">';
-        $content .= $this->buildVideoList($wpasset);
-        $content .= $this->buildAudioList($wpasset);
-        $content .= $this->buildImageList($wpasset);
-        $content .= $this->buildDocsList($wpasset);
-        $content .= '</div>';
-
-        echo __( $content, 'MM_Asset_widget' );
-        echo $args['after_widget'];
+        }else{
+          $content .= '<div class="widget" id="message"><br><p>Purchase a licence and gain further access to more resources for this course.</p>';
+          $content .= '<br><a class="llms-button-action button" href="/become-a-member">I WANT A LICENCE</a></div>';
+        }
       }
+      echo __( $content, 'MM_Asset_widget' );
+      echo $args['after_widget'];
     }
 
     /**
