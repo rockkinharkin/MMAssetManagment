@@ -10,8 +10,10 @@
 	License: GPL3
 */
 defined( 'ABSPATH' ) or die( 'Unauthorised Access' );
+$y = in_array( 'lifterlms/lifterlms.php',get_option('active_plugins') );
 
-if( !is_admin() ){ // to prevent error message about "undefined BUCKURL constant - ( only accessible from user frontend not admin area )"
+if ( ( $y == 1 ) && ( !is_admin() ) ) {
+
   // load scripts
   function mm_asset_widget_scripts() {
      wp_enqueue_style( 'mmawidget-styles', plugins_url('css/mmawidget-styles.css',__FILE__ ) );
@@ -21,7 +23,7 @@ if( !is_admin() ){ // to prevent error message about "undefined BUCKURL constant
 
   // Creating the widget
   require 'inc\aws-resources.php';
-
+  
   class MM_Asset_Widget extends WP_Widget {
 
     function __construct() {

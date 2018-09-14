@@ -13,9 +13,10 @@
 	License: GPL3
 */
 
-defined( 'ABSPATH' ) || exit;
-if (  is_plugin_active( ABSPATH.'wp-content/plugins/lifterlms/lifterlms.php' ) ) {
+defined( 'ABSPATH' ) or die ('Unauthorised Access');
+$y = in_array( 'lifterlms/lifterlms.php',get_option('active_plugins') );
 
+if ($y == 1) {
 
 // /**
 //  * Register meta box(es).
