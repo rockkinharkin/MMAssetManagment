@@ -10,20 +10,18 @@
 	License: GPL3
 */
 defined( 'ABSPATH' ) or die( 'Unauthorised Access' );
-$y = in_array( 'lifterlms/lifterlms.php',get_option('active_plugins') );
+$a = in_array( 'lifterlms/lifterlms.php',get_option('active_plugins'));
 
-if ( ( $y == 1 ) && ( !is_admin() ) ) {
+if( ( $a == 1 ) && ( !is_admin() ) ) {
 
-  // load scripts
+  // load scripts for widget frontend
   function mm_asset_widget_scripts() {
      wp_enqueue_style( 'mmawidget-styles', plugins_url('css/mmawidget-styles.css',__FILE__ ) );
      wp_enqueue_script( 'mmawidget-script', plugins_url('js/mmawidget.js',__FILE__ ), ['jquery'], '1.0.0', true );
   }
   add_action( 'wp_enqueue_scripts', 'mm_asset_widget_scripts' );
 
-  // Creating the widget
-  require 'inc\aws-resources.php';
-  
+// Creating the widget
   class MM_Asset_Widget extends WP_Widget {
 
     function __construct() {
@@ -32,6 +30,8 @@ if ( ( $y == 1 ) && ( !is_admin() ) ) {
       $this->imgSubDir  = '/images/';
       $this->docsSubDir  = '/docs/';
       $this->vidSubDir  = '/video/';
+
+      $this->requires();
 
     	$widget_ops = array(
   			'classname' => 'MM_Asset_Widget',
@@ -65,12 +65,17 @@ if ( ( $y == 1 ) && ( !is_admin() ) ) {
       $title = apply_filters( 'widget_title', $instance['title'] );
 
       if( is_user_logged_in() ){
+      $memberships = new MM_Assets_LLMS_Memberships();
+      $membership = $memberships->UserHasMembership( get_current_user_id() );
+
         //  need to check for licence here also.
 
         // before and after widget arguments are defined by themes
         echo $args['before_widget'];
         if ( ! empty( $title ) )
         echo $args['before_title'] . $title . $args['after_title'];
+
+        print_r($membership);
 
         $content .= '<div class="mm-container">';
         $content .= $this->buildVideoList($wpasset);
@@ -122,7 +127,12 @@ if ( ( $y == 1 ) && ( !is_admin() ) ) {
     }
 
   //=======================================================================================================//
-  //=========================================== HELPER FUNCTIONS ==========================================//
+  //=========================================== HELPER METHODS ==========================================//
+
+    private function requires(){
+      require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/aws-resources.php';
+      require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/llms-memberships.php'; // to check memberships#
+    }
 
     private function prepareS3FileObject($folder=NULL){
       $s3Objects = new AWS_GetResources;
