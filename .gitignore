@@ -7,3 +7,4 @@ wp-config.php
 wp-config-bitnami.php
 .htaccess
 code.php
+wp-content/plugins/mm-asset-widget/config.php

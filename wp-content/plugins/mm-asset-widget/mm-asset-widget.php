@@ -30,6 +30,7 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
       $this->imgSubDir  = '/images/';
       $this->docsSubDir  = '/docs/';
       $this->vidSubDir  = '/video/';
+      $this->currentUser = wp_get_current_user();
 
       $this->requires();
 
@@ -71,9 +72,9 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
 
           if ( ! empty( $title ) )
             echo $args['before_title'] . $title . $args['after_title'];
-
+            echo "WIDGET CALL:::".print_r($membership);
           //  need to check for licence here also.
-          if( $membership['_has_membership'] == 'yes'){
+          if(  ( $membership['_has_membership'] == 'yes' ) ){
             // before and after widget arguments are defined by themes
 
           $content .= '<div class="mm-container">';
@@ -133,6 +134,7 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
   //=========================================== HELPER METHODS ==========================================//
 
     private function requires(){
+      require_once ABSPATH.'wp-content/plugins/mm-asset-widget/config.php';
       require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/aws-resources.php';
       require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/llms-memberships.php'; // to check memberships#
     }
