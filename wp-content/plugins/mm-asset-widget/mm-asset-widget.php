@@ -68,13 +68,13 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
 
       if( is_user_logged_in() ){
         $memberships = new MM_Assets_LLMS_Memberships();
-        $membership = $memberships->UserHasMembership( get_current_user_id() );
+      //  $membership = $memberships->UserHasMembership( get_current_user_id() );
 
           if ( ! empty( $title ) )
             echo $args['before_title'] . $title . $args['after_title'];
-            echo "WIDGET CALL:::".print_r($membership);
+            //echo "WIDGET CALL:::".print_r($membership['_has_membership']);
           //  need to check for licence here also.
-          if(  ( $membership['_has_membership'] == 'yes' ) ){
+          if( ( in_array('administrator',$this->currentUser->roles) ) || ( $memberships->isUserEnrolled( $wpasset->ID) == 'is-enrolled' ) ){
             // before and after widget arguments are defined by themes
 
           $content .= '<div class="mm-container">';
