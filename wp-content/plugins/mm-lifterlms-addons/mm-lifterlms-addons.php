@@ -56,5 +56,33 @@ function build_course_assets_meta_box( $post ){
   }
 
   add_action( 'save_post', 'wpdocs_save_meta_box' );
+
+  // Upload Asset View
+  add_action( 'admin_menu', 'mm_upload_asset_register' );
+
+function mm_upload_asset_register()
+{
+    add_menu_page(
+        'Upload MAKEMATIC Asset',     // page title
+        'Upload MAKEMATIC Asset',     // menu title
+        'manage_options',   // capability
+        'mm-upload-asset',     // menu slug
+        'mm_upload_asset_view' // callback function
+    );
+}
+function mm_upload_asset_view()
+{
+    global $title;
+
+    print '<div class="wrap">';
+    print "<h1>$title</h1>";
+
+    $file = plugin_dir_path( __FILE__ ) . "/views/upload.php";
+
+    if ( file_exists( $file ) )
+        require $file;
+
+    print '</div>';
+}
 }
 ?>
