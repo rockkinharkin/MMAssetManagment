@@ -18,6 +18,21 @@ $y = in_array( 'lifterlms/lifterlms.php',get_option('active_plugins') );
 
 if ($y == 1) {
 
+
+  // load scripts
+  function load_custom_wp_admin_scripts() {
+    $screen = get_current_screen();
+    // echo "SCREEN:::".$screen->base;
+    // echo ":::::";
+    // echo strpos( $screen->base, 'mm-upload-asset');
+
+    if ( strpos( $screen->base, 'toplevel_page_mm-upload-asset') !== false ){
+     wp_enqueue_style( 'mmaddon-styles', plugins_url('css/style.css',__FILE__ ) );
+     wp_enqueue_script( 'mmaddon-script', plugins_url('js/upload.js',__FILE__ ), ['jquery'], '1.0.0' );
+   }
+  }
+  add_action( 'admin_enqueue_scripts', 'load_custom_wp_admin_scripts' );
+
 // /**
 //  * Register meta box(es).
 //  */
