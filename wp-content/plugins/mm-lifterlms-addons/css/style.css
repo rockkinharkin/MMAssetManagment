@@ -1,0 +1,16 @@
+.main-contanier {
+  border: 2px dashed #aaa;
+  font: #333 large;
+  font-family: "Helvetica";
+  margin-top: 1em;
+  padding:3em;
+  text-align: center;
+}
+
+.dropzone {
+  color:#aaa;
+}
+.dropzone.dragover{
+  border-color:#000;
+  color:#000;
+}

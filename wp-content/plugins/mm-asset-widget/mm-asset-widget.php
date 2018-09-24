@@ -10,29 +10,22 @@
 	License: GPL3
 */
 defined( 'ABSPATH' ) or die( 'Unauthorised Access' );
-$a = in_array( 'lifterlms/lifterlms.php',get_option('active_plugins'));
 
-if( ( $a == 1 ) && ( !is_admin() ) ) {
-
-  // load scripts for widget frontend
-  function mm_asset_widget_scripts() {
-     wp_enqueue_style( 'mmawidget-styles', plugins_url('css/mmawidget-styles.css',__FILE__ ) );
-     wp_enqueue_script( 'mmawidget-script', plugins_url('js/mmawidget.js',__FILE__ ), ['jquery'], '1.0.0', true );
-  }
-  add_action( 'wp_enqueue_scripts', 'mm_asset_widget_scripts' );
+add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } );
 
 // Creating the widget
   class MM_Asset_Widget extends WP_Widget {
 
     function __construct() {
+      $this->requires();
+      $this->register_scripts();
+
       $this->s3ResUrl   = 'http://'.BUCKURL;
       $this->audioSubDir  = '/audio/';
       $this->imgSubDir  = '/images/';
       $this->docsSubDir  = '/docs/';
       $this->vidSubDir  = '/video/';
       $this->currentUser = wp_get_current_user();
-
-      $this->requires();
 
     	$widget_ops = array(
   			'classname' => 'MM_Asset_Widget',
@@ -137,6 +130,19 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
       require_once ABSPATH.'wp-content/plugins/mm-asset-widget/config.php';
       require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/aws-resources.php';
       require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/llms-memberships.php'; // to check memberships#
+      //require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/shortcodes.php';
+    }
+
+    public function mm_asset_widget_scripts() {
+       wp_enqueue_style( 'mmawidget-styles', plugins_url('css/mmawidget-styles.css',__FILE__ ) );
+       wp_enqueue_script( 'mmawidget-script', plugins_url('js/mmawidget.js',__FILE__ ), ['jquery'], '1.0.0', true );
+    }
+
+    public function register_scripts(){
+      $a = in_array( 'lifterlms/lifterlms.php',get_option('active_plugins') );
+      if( ( $a == 1 ) && ( !is_admin() ) ) {       // load scripts for widget frontend
+        add_action( 'wp_enqueue_scripts', array($this,'mm_asset_widget_scripts' ) );
+      }
     }
 
     private function prepareS3FileObject($folder=NULL){
@@ -149,6 +155,7 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
       $s3FileList = $this->prepareS3FileObject($wpasset->assetDir.$this->audioSubDir);
 
       $list .=  '<div id="audio-list" class="mmarw-audio"><h4>Audio URLs</h4><ul>';
+
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
         $list .=  '<li><a href="'.$this->s3ResUrl.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
@@ -192,7 +199,7 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
         if( strpos( $meta->file,'txt')!== false ){ $class ='txt';}
         if( strpos( $meta->file,'rtf')!== false ){ $class ='rtf';}
 
-        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
+        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.$meta->full_path.'"></a></li>';
       }
       $list .=  '</ul></div>';
       return $list;
@@ -226,11 +233,12 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
               if( strpos( $meta->file,'wmv') !== false ){ $type ='wmv'; }
               if( strpos( $meta->file,'webM') !== false ){ $type ='webM'; }
 
-
+              //
+              //.WP_HOME.'check-licence?type=video&aid='.$wpasset->ID.'&uid='.$this->currentUser->ID.'&src='.$meta->full_path.
               $list .= '<h5>'.$meta->display_fileName.'</h5>
                   <textarea id="video-'.$wpasset->ID.'">
                     <video width="320" height="240" controls>
-                    <source src="'.BUCKURL.'/'.$meta->fullpath_without_file_extension.'.'.$type.'" type="video/'.$type.'">
+                    <source src="'.BUCKURL.'/'.$meta->fullpath_without_file_extension.'.'.$type.' type="video/'.$type.'">
                     Your browser does not support the video tag. Please find the correct browser for support of this video tag here: https://www.w3schools.com/html/html5_video.asp
                     </video>
                   </textarea>';
@@ -241,7 +249,6 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
     }
 
     private function buildAssetMeta( $s3asset=NULL ){
-    //  print_r($s3asset);
 
       $meta = new stdClass;
       $meta->asset_id                        = 0;
@@ -261,8 +268,6 @@ if( ( $a == 1 ) && ( !is_admin() ) ) {
       }
       return $meta;
     }
-  } // Class ends
 
-  add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } );
-}
+} // Class ends
 ?>
