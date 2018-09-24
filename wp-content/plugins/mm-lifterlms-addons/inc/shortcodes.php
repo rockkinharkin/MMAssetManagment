@@ -2,7 +2,7 @@
 class MM_Shortcodes{
 
   function __construct(){
-    //$this->requires();
+    $this->requires();
     $this->hooks();
     $this->userID=1;
     $this->postID=1;
@@ -15,7 +15,7 @@ class MM_Shortcodes{
   }
 
   public function checkLicence($userid,$assetid){
-    return "check licence function";
+    echo "check licence function";
     $member = new MM_Assets_LLMS_Memberships();
     if(  $member->isUserEnrolled($userid,$assetid) == 'is-enrolled' ){
         $url = BUCKURL.'/'.$this->filesrc;
