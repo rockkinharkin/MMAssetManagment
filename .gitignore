@@ -8,3 +8,4 @@ wp-config-bitnami.php
 .htaccess
 code.php
 wp-content/plugins/mm-asset-widget/config.php
+wp-content/plugins/mm-lifter-lms-addons/config.php

@@ -10,10 +10,7 @@ class MM_Assets_LLMS_Memberships {
     require_once ABSPATH.'wp-content/plugins/lifterlms/includes/functions/llms.functions.person.php';
   }
 
-  public function isUserEnrolled($postid=0,$userid=1){
-    if( $userid > 1 ){
-      return $enrolled = llms_is_user_enrolled( $userid, $postid ) ? 'is-enrolled' : 'not-enrolled';
-    }
+  public function isUserEnrolled($postid){
     return $enrolled = llms_is_user_enrolled( get_current_user_id(), $postid ) ? 'is-enrolled' : 'not-enrolled';
   }
 
