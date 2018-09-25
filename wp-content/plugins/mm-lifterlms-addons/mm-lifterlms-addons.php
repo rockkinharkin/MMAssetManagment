@@ -29,9 +29,9 @@ class MM_LifterLMS_AddOns {
   }
 
   private function hooks(){
-      add_action( 'add_meta_boxes', 'wpdocs_register_meta_boxes' );
-      add_action( 'save_post', 'wpdocs_save_meta_box' );
-      add_action( 'admin_menu', 'mm_upload_asset_register' ); // Upload Asset View
+      add_action( 'add_meta_boxes', array($this,'wpdocs_register_meta_boxes' ));
+      add_action( 'save_post', array($this,'wpdocs_save_meta_box' ));
+      add_action( 'admin_menu', array($this,'mm_upload_asset_register' ) ); // Upload Asset View
   }
 
   // /**
@@ -82,7 +82,7 @@ class MM_LifterLMS_AddOns {
           'Upload MAKEMATIC Asset',     // menu title
           'manage_options',   // capability
           'mm-upload-asset',     // menu slug
-          'mm_upload_asset_view' // callback function
+          array($this,'mm_upload_asset_view') // callback function
       );
   }
   public function mm_upload_asset_view(){
