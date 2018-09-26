@@ -39,7 +39,7 @@ class MM_LifterLMS_AddOns {
   //  */
   public function wpdocs_register_meta_boxes() {
     if( $this->exists == 1 ){
-      add_meta_box( 'mm-course-assets', __( 'Course Assets', 'mm-lifterlms-addons' ), 'build_course_assets_meta_box', 'course','side' );
+      add_meta_box( 'mm-course-assets', __( 'Course Assets', 'mm-lifterlms-addons' ), array($this,'build_course_assets_meta_box'), 'course','side' );
     }
     return false;
   }

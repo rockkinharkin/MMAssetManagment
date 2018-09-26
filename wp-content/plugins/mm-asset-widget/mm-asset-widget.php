@@ -63,12 +63,13 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
         $memberships = new MM_Assets_LLMS_Memberships();
       //  $membership = $memberships->UserHasMembership( get_current_user_id() );
 
-          if ( ! empty( $title ) )
-            echo $args['before_title'] . $title . $args['after_title'];
             //echo "WIDGET CALL:::".print_r($membership['_has_membership']);
           //  need to check for licence here also.
-          if( ( in_array('administrator',$this->currentUser->roles) ) || ( $memberships->isUserEnrolled( $wpasset->ID) == 'is-enrolled' ) ){
+          //( in_array('administrator',$this->currentUser->roles) ) ||//
+          if(  ( $memberships->isUserEnrolled( $wpasset->ID) == 'is-enrolled' ) ){
             // before and after widget arguments are defined by themes
+          if ( ! empty( $title ) )
+            echo $args['before_title'] . $title . $args['after_title'];
 
           $content .= '<div class="mm-container">';
           $content .= $this->buildVideoList($wpasset);
@@ -188,7 +189,6 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
 
       $s3FileList = $this->prepareS3FileObject($wpasset->assetDir.$this->docsSubDir);
       $list .= '<div id="docs-list" class="mmarw-docs"><h4>Documents</h4><ul>';
-
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
 
@@ -199,7 +199,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
         if( strpos( $meta->file,'txt')!== false ){ $class ='txt';}
         if( strpos( $meta->file,'rtf')!== false ){ $class ='rtf';}
 
-        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.$meta->full_path.'"></a></li>';
+        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
       $list .=  '</ul></div>';
       return $list;
