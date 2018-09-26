@@ -65,8 +65,8 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
 
             //echo "WIDGET CALL:::".print_r($membership['_has_membership']);
           //  need to check for licence here also.
-          //( in_array('administrator',$this->currentUser->roles) ) ||//
-          if(  ( $memberships->isUserEnrolled( $wpasset->ID) == 'is-enrolled' ) ){
+          ////
+          if( ( in_array('administrator',$this->currentUser->roles) ) || ( $memberships->isUserEnrolled( $wpasset->ID) == 'is-enrolled' ) ){
             // before and after widget arguments are defined by themes
           if ( ! empty( $title ) )
             echo $args['before_title'] . $title . $args['after_title'];
@@ -159,7 +159,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
 
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
-        $list .=  '<li><a href="'.$this->s3ResUrl.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
+        $list .=  '<li><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
       $list .= '</ul></div>';
       return $list;
@@ -177,7 +177,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
         if( strpos( $meta->file,'gif') !== false ){ $class ='gif';}
         if( strpos( $meta->file,'tiff')!== false ){ $class ='tiff';}
 
-        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
+        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
       $list .=  '</ul></div>';
 
@@ -199,7 +199,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
         if( strpos( $meta->file,'txt')!== false ){ $class ='txt';}
         if( strpos( $meta->file,'rtf')!== false ){ $class ='rtf';}
 
-        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
+        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
       $list .=  '</ul></div>';
       return $list;
