@@ -20,7 +20,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       $this->requires();
       $this->register_scripts();
 
-      $this->s3ResUrl   = 'http://'.BUCKURL;
+      $this->s3ResUrl   = BUCKURL;
       $this->audioSubDir  = '/audio/';
       $this->imgSubDir  = '/images/';
       $this->docsSubDir  = '/docs/';
