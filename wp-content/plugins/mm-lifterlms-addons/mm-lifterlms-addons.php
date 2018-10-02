@@ -76,7 +76,7 @@ class MM_LifterLMS_AddOns {
                   <span class="toggle-indicator" aria-hidden="true"></span>
                   </button>
                         <div class="llms-builder-launcher">
-  			                     <a class="llms-button-primary full" href="http://'.WP_SITEURL.'wp-admin/admin.php?page=llms-link-assets&amp;course_id='.$post->ID.'">Attach Assets</a>
+  			                     <a class="llms-button-primary full" href="'.WP_SITEURL.'wp-admin/admin.php?page=mm-upload-asset&amp;course_id='.$post->ID.'">Attach Assets</a>
   	                     </div>
   		            </div>';
     }
@@ -110,7 +110,6 @@ class MM_LifterLMS_AddOns {
 
       if ( file_exists( $file ) )
           require $file;
-
       print '</div>';
   }
 }

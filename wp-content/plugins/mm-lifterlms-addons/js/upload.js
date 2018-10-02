@@ -1,7 +1,7 @@
 ( function(){
     var dropzone=document.getElementById('dropzone');
     console.log(dropzone);
-    dropzone.ondragenter = function(){
+    dropzone.ondragover = function(){
       this.className = 'dropzone dragover';
       return false;
     }
