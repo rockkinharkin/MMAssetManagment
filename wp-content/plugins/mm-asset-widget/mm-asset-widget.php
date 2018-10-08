@@ -20,12 +20,12 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       $this->requires();
       $this->register_scripts();
 
-      $this->s3ResUrl   = BUCKURL;
+      $this->s3ResUrl     = BUCKURL;
       $this->audioSubDir  = '/audio/';
-      $this->imgSubDir  = '/images/';
-      $this->docsSubDir  = '/docs/';
-      $this->vidSubDir  = '/video/';
-      $this->currentUser = wp_get_current_user();
+      $this->imgSubDir    = '/images/';
+      $this->docsSubDir   = '/docs/';
+      $this->vidSubDir    = '/video/';
+      $this->currentUser  = wp_get_current_user();
 
     	$widget_ops = array(
   			'classname' => 'MM_Asset_Widget',
@@ -128,8 +128,10 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
   //=========================================== HELPER METHODS ==========================================//
 
     private function requires(){
-      require_once ABSPATH.'wp-content/plugins/mm-asset-widget/config.php';
-      require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/aws-resources.php';
+      if( in_array( 'mm-lifterlms-addons/mm-lifterlms-addons.php', get_option('active_plugins') ) == 1 ){
+        $mmAddOns = new MM_LifterLMS_AddOns();
+        $mmAddOns->aws_requires();
+      }
       require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/llms-memberships.php'; // to check memberships#
       //require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/shortcodes.php';
     }

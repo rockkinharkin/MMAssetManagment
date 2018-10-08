@@ -9,8 +9,13 @@
 
 .dropzone {
   color:#aaa;
+  padding:2em;
+  background-color: white;
+  margin:5px;
 }
-.dropzone.dragover{
-  border-color:#000;
-  color:#000;
+.dropzone p{
+  font-size: 22pt;
+}
+.dropzone.highlight{
+  background-color: lightBlue;
 }

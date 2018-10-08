@@ -23,7 +23,7 @@ class MM_Assets_LLMS_Memberships {
       $memberships = $llmsUser->get_user_memberships_data($userid); //returns the users "posts" ( courses ) / memberships they have purchased
 
       foreach ( $memberships as $membership ){
-        print_r($membership);
+      //  print_r($membership);
         //if( isset( $membership['_enrollment_trigger'] ) ){
           $order = $membership['_enrollment_trigger']->meta_value;
           // $orderID = str_replace( 'order_','',$order );
