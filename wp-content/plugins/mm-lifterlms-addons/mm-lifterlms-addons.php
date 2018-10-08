@@ -14,8 +14,6 @@
 */
 
 defined( 'ABSPATH' ) or die ('Unauthorised Access');
-new MM_LifterLMS_AddOns();
-
 class MM_LifterLMS_AddOns {
 
   function __construct(){
@@ -40,7 +38,7 @@ class MM_LifterLMS_AddOns {
       add_action( 'add_meta_boxes', array($this,'wpdocs_register_meta_boxes' ));
       add_action( 'save_post', array($this,'wpdocs_save_meta_box' ));
       add_action( 'admin_menu', array($this,'mm_upload_asset_register' ) ); // Upload Asset View
-      add_action( 'admin_post_upload_asset', array('AWS_GetResources','standardUpload'));
+      add_action( 'admin_post_upload_file', array('AWS_GetResources','standardUpload'));
   }
 
   // load scripts
@@ -49,7 +47,7 @@ class MM_LifterLMS_AddOns {
 
     if ( strpos( $screen->base, 'toplevel_page_mm-upload-asset') !== false ){
      wp_enqueue_style( 'mmaddon-styles', plugins_url('css/style.css',__FILE__ ) );
-     wp_enqueue_script( 'mmaddon-script', plugins_url('js/helpers.js',__FILE__ ), ['jquery'], '1.0.0' );
+     //wp_enqueue_script( 'mmaddon-script', plugins_url('js/helpers.js',__FILE__ ), ['jquery'], '1.0.0' );
      wp_enqueue_script( 'mmaddon-script', plugins_url('js/upload.js',__FILE__ ), ['jquery'], '1.0.0' );
    }
   }
@@ -108,14 +106,18 @@ class MM_LifterLMS_AddOns {
   public function mm_upload_asset_view(){
       global $title;
 
-      print '<div class="wrap">';
-      print "<h1>$title</h1>";
+      echo '<div class="wrap">';
+      echo "<h1>$title</h1>";
 
       $file = plugin_dir_path( __FILE__ ) . "/views/upload.php";
 
       if ( file_exists( $file ) )
           require $file;
-      print '</div>';
+      echo '</div>';
+  }
+
+  public function process_upload($hook){
+    return false;
   }
 }
 ?>
