@@ -96,8 +96,8 @@ class MM_LifterLMS_AddOns {
   public function mm_upload_asset_register()
   {
       add_menu_page(
-          'Upload MAKEMATIC Asset',     // page title
-          'Upload MAKEMATIC Asset',     // menu title
+          'Upload Assets',     // page title
+          'MM Asset Uploader',     // menu title
           'manage_options',   // capability
           'mm-upload-asset',     // menu slug
           array($this,'mm_upload_asset_view') // callback function
@@ -105,9 +105,10 @@ class MM_LifterLMS_AddOns {
   }
   public function mm_upload_asset_view(){
       global $title;
+      $post = get_post($_GET['course_id']);
 
       echo '<div class="wrap">';
-      echo "<h1>$title</h1>";
+      echo "<h1>$title for ". $post->post_title."</h1>";
 
       $file = plugin_dir_path( __FILE__ ) . "/views/upload.php";
 

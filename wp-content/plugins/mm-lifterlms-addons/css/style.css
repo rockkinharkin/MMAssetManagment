@@ -5,6 +5,7 @@
   margin-top: 1em;
   padding:3em;
   text-align: center;
+  width: 100%;
 }
 
 .dropzone {
@@ -12,10 +13,39 @@
   padding:2em;
   background-color: white;
   margin:5px;
+  width: 90%;
 }
 .dropzone p{
   font-size: 22pt;
 }
 .dropzone.highlight{
   background-color: lightBlue;
+}
+
+.dropzone img {
+  text-align:left;
+  width:10%;
+}
+.dropzone img.video{
+  background-image: url('./css/icons/video-icon.svg');
+}
+.dropzone img.audio{
+  background-image: url('./css/icons/audio-icon.svg');
+}
+.dropzone img.docs{
+  background-image: url('./css/icons/file-icon.svg');
+}
+.dropzone p {
+  font-size: 32pt;
+  padding-top: 1.2em;
+  margin:0;
+}
+.dropzone .col-left{
+  width:70%;
+  float:right;
+  text-align: left;
+}
+.dropzone .col-right{
+  width:50%;
+  display:inline;
 }

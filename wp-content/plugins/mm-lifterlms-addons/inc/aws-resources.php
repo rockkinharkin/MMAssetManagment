@@ -38,7 +38,7 @@ command line for php upload.
 php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
 
 */
-  public function standardUpload($file,$assetid){
+  public function standardUpload($post,$assetid){
     $result   = NULL;
     $keyName  = $assetid.'_'.$asset['slug'].'/';
     $path     = S3URL.'/'.$bucketName.'/'. $keyName;
@@ -76,7 +76,7 @@ php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
     $dir='/';
 
     // if its a Video
-    $vtypes = ['.mp4','.wav','.avi','.ogg'];
+    $vtypes = ['.mp4','.wav','.avi','.ogg','3G2','.3GP','.3GP2','.3GPP','.3GPP2','.3MM','.3P2','.AAF','.AEC','.AEGRAPHIC','.EXO','.F4V','.GVI','.HDMOV','.HDV','.M2T','.M4E','.M75'];
 
     foreach( $vtypes as $v ){
       if( strpos($file,$v) !== false ){ $dir='video'; }
@@ -85,7 +85,7 @@ php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
     // if it's audio
     $atypes = ['.3gp','.aa','.aac','.aax','.act','.aiff','.m4a',
                 '.amr','.ape','.au','.awb','.dct','.dss','.dvf',
-                '.dvf','.flac','.gsm','.iklax','.ivs','.m4a','m4b',
+                '.dvf','.flac','.gsm','.iklax','.ivs','.m2a','.m4a','m4b',
                 '.m4p','.mmf','.mp3','.mpc','.msv','.nsf','.ogg','.oga',
                 '.mogg','.opus','.ra','.rm','.raw','.sln','.tta','.vox',
                 '.wav','.wav','.wma','.wv','.webm','.8svx'];
