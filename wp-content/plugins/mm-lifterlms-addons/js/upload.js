@@ -2,8 +2,10 @@ jQuery(document).ready( function($)
 {
   var filename   = '';
   var image_data = '';
-  //var currURL = window.location;
+//  var $files = [];
+  var ajax_url = ajax_data.ajax_url;
 
+  // helper
   function GetURLParameter(sParam){
     var sPageURL = window.location.search.substring(1);
     var sURLVariables = sPageURL.split('&');
@@ -16,14 +18,14 @@ jQuery(document).ready( function($)
     }
   }
 
+// The Uploader
   $.event.props.push('dataTransfer');
-  $('.dropzone').on(
+  $('.dropzone div').on(
     {
       dragover: function(e) {
         e.stopPropagation();
         e.preventDefault();
         $(this).addClass('highlight');
-        console.log("t3");
         return false; //crucial for 'drop' event to fire
       },
       dragleave: function(e) {
@@ -33,54 +35,45 @@ jQuery(document).ready( function($)
         return false;
       },
       drop: function(e) {
-       Id = $(this).attr('id');
-       console.log(Id);
        e.stopPropagation();
        e.preventDefault();
+
+       var this_obj = $(this);
+       Id = $(this).attr('id');
        var file = e.dataTransfer.files[0];
        var fileReader = new FileReader();
 
-       var this_obj = $(this);
-
        fileReader.onload = (function(file) {
-           return function(event) {
-               // Preview
-               filename = file.name;
-               // if file is an image
-               image_data = event.target.result;
+         return function(event) {
+           // Preview
+           filename = file.name;
+           // if file is an image
+           var image_data = event.target.result;
 
-               $(this_obj).next().html('<button id="'+Id+'" class="upload-file button">Upload file</button>');
-
-               if( ( Id == 'dropzone-video' ) || ( Id == 'dropzone-audio' ) || ( Id == 'dropzone-docs' ) ){
-                 $(this_obj).html('<p class="file">'+event.target.result+'</p>');
-               }
-               if( Id == 'dropzone-images'){
-                 $(this_obj).html('<img style="max-width: 200px; max-height: 200px;" src="' + event.target.result + '">');
-               }
-
-
-               var assetId = GetURLParameter('course_id');
-               var data= {  action: 'upload_file',
-                             filename: filename,
-                             base64: image_data,
-                             assetid: assetId };
-
-               console.log( assetId, data );
-               //
-                //$.post( ajax_object.ajax_url,data, function(response){
-               //   $(this_obj).parent().prev().html(response);
-               //   $(this_obj).remove();
-               // });
-             console.log('ok');
-           };
-       })(file);
+           $('<p class="file">'+file.name+'</p>').appendTo(this_obj);
+           if( Id == 'img-leftCol'){
+             $('<img style="max-width: 200px; max-height: 200px;" src="' + event.target.result + '">').appendTo(this_obj);
+           }
+           console.log('ok');
+         };
+        })(file);
        fileReader.readAsDataURL(file);
 
-       // Upload file
-      // $('.upload-file').on('click',  function(e){
+       var assetId = GetURLParameter('course_id');
+       var assetSlug = GetURLParameter('course_slug');
+       var data= { 'action': 'upload_files',
+                    'file': file.name,
+                    'base64': image_data,
+                    'assetid': assetId,
+                    'assetslug': assetSlug };
 
-      //  });
-       //return false;
+        // Upload file
+       $('#upload-files').on('click', function(e){
+         $.post( ajax_url,data, function(response){
+             alert(response);
+           });
+       });
+       return false;
      }
    });
 });

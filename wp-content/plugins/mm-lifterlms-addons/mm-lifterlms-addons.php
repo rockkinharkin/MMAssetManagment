@@ -38,7 +38,7 @@ class MM_LifterLMS_AddOns {
       add_action( 'add_meta_boxes', array($this,'wpdocs_register_meta_boxes' ));
       add_action( 'save_post', array($this,'wpdocs_save_meta_box' ));
       add_action( 'admin_menu', array($this,'mm_upload_asset_register' ) ); // Upload Asset View
-      add_action( 'admin_post_upload_file', array('AWS_GetResources','standardUpload'));
+      add_action( 'wp_ajax_upload_files', array('AWS_GetResources','standardUpload'));
   }
 
   // load scripts
@@ -47,8 +47,10 @@ class MM_LifterLMS_AddOns {
 
     if ( strpos( $screen->base, 'toplevel_page_mm-upload-asset') !== false ){
      wp_enqueue_style( 'mmaddon-styles', plugins_url('css/style.css',__FILE__ ) );
-     //wp_enqueue_script( 'mmaddon-script', plugins_url('js/helpers.js',__FILE__ ), ['jquery'], '1.0.0' );
-     wp_enqueue_script( 'mmaddon-script', plugins_url('js/upload.js',__FILE__ ), ['jquery'], '1.0.0' );
+     wp_enqueue_script( 'mmaddon-script', plugins_url('js/upload.js',__FILE__ ), ['jquery'], '1.0.0', true );
+     // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
+	   wp_localize_script( 'mmaddon-script', 'ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+
    }
   }
 
@@ -79,7 +81,7 @@ class MM_LifterLMS_AddOns {
                   <span class="toggle-indicator" aria-hidden="true"></span>
                   </button>
                         <div class="llms-builder-launcher">
-  			                     <a class="llms-button-primary full" href="'.WP_SITEURL.'wp-admin/admin.php?page=mm-upload-asset&amp;course_id='.$post->ID.'">Attach Assets</a>
+  			                     <a class="llms-button-primary full" href="'.WP_SITEURL.'wp-admin/admin.php?page=mm-upload-asset&amp;course_id='.$post->ID.'&course_slug="'.$post->slug.'">Attach Assets</a>
   	                     </div>
   		            </div>';
     }
@@ -110,6 +112,7 @@ class MM_LifterLMS_AddOns {
       echo '<div class="wrap">';
       echo "<h1>$title for ". $post->post_title."</h1>";
 
+      //$file = plugin_dir_path( __FILE__ ) . "/third-party/s3.fine-uploader/templates/simple-thumbnails.html";
       $file = plugin_dir_path( __FILE__ ) . "/views/upload.php";
 
       if ( file_exists( $file ) )

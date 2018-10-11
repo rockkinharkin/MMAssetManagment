@@ -1,7 +1,7 @@
 <div class="main-contanier" id="mm-asset-container">
 <!-- video -->
   <div class="dropzone" id="dropzone-video">
-    <div class="col-left">
+    <div class="col-left" id="vid-leftCol">
       <p>Drop video files here for uploading</p>
       <!--input id="file" type="file" name="file" size="30" accept="file_extension|video/*" />-->
     </div>
@@ -12,7 +12,7 @@
 
 <!-- audio -->
   <div class="dropzone" id="dropzone-audio">
-    <div class="col-left">
+    <div class="col-left" id="audio-leftCol">
       <p>Drop audio files here for uploading</p>
     <!--  <input id="file" type="file" name="file" size="30" accept="file_extension|audio/*" />-->
     </div>
@@ -24,8 +24,8 @@
 
   <!--Images -->
   <div class="dropzone" id="dropzone-images">
-    <div class="col-left">
-      <p>Drop files image here for uploading</p>
+    <div class="col-left" id="img-leftCol">
+      <p>Drop image files here for uploading</p>
     <!--  <input id="file" type="file" name="file" size="30" accept="file_extension|image/jpg,image/png,image/jpeg,image/gif" />-->
     </div>
     <div class="col-right">
@@ -36,7 +36,7 @@
 
 <!-- docs -->
   <div class="dropzone" id="dropzone-docs">
-    <div class="col-left">
+    <div class="col-left" id="docs-leftCol">
       <!--  <input id="file" type="file" name="file" size="30" accept="file_extension|media_type" />-->
       <p>Drop document files here for uploading</p>
     </div>
@@ -45,4 +45,5 @@
 
     </div>
   </div>
+  <div class="action-buttons"><button id="upload-files" class="button">Upload files</button></div>
 </div>

@@ -38,41 +38,42 @@ command line for php upload.
 php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
 
 */
-  public function standardUpload($post,$assetid){
+  public function standardUpload(string $action=NULL, int $assetid=0,string $assetslug, string $base64=NULL,$filename=NULL){
     $result   = NULL;
-    $keyName  = $assetid.'_'.$asset['slug'].'/';
-    $path     = S3URL.'/'.$bucketName.'/'. $keyName;
+    $keyName  = $assetid.'_'.$assetslug.'/';
+    $path     = S3URL.'/'.$bucketName.'/'.$keyName;
 
     // check the filetype to determine the directory the file should be saved in.
-    if( $d=checkFileType($file) !== '' ){
+    if( $d=$this->checkFileType($filename) !== '' ){
       $path=$path.$d;
     }
 
-    if( checkFileType($file) == 'video' ){
-      return $this->largeUpload($file,$asset,$path);
+    if( $this->checkFileType($filename) == 'video' ){
+      return $this->largeUpload($filename,$asset,$path);
     }else{
       try {
   		    $result = $this->s3->putObject( array('Bucket'=>$this->bucket,
                                   'Key' =>$path,
-                                  'SourceFile' => $file,
+                                  'SourceFile' => $filename,
                                   'StorageClass' => 'REDUCED_REDUNDANCY',
                                   'ACL' =>'public-read'	)	);
           echo $result['ObjectURL'] . PHP_EOL;
   	  } catch (S3Exception $e) {
   		    echo $e->getMessage() . PHP_EOL;
       }
-  	return $result;
+    wp_die();
+  //	return $result;
   }
 }
 
 // s3 part uploader for files over 5GB.
-  public function largeUpload(array $file, array $asset,$directory='images'){
+  public function largeUpload(array $files, array $assets,$directory='images'){
 
   }
 
   /**===== HELPER FUNCTIONS=== **/
 
-  private function checkFileType($file){
+  public function checkFileType($file){
     $dir='/';
 
     // if its a Video

@@ -1,16 +1,15 @@
 .main-contanier {
-  border: 2px dashed #aaa;
-  font: #333 large;
+  font: #333 middle;
   font-family: "Helvetica";
   margin-top: 1em;
-  padding:3em;
+  padding:1em;
   text-align: center;
   width: 100%;
 }
 
 .dropzone {
   color:#aaa;
-  padding:2em;
+  padding:1em;
   background-color: white;
   margin:5px;
   width: 90%;
