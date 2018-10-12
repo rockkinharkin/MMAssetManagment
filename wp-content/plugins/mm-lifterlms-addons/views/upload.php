@@ -6,7 +6,7 @@
       <!--input id="file" type="file" name="file" size="30" accept="file_extension|video/*" />-->
     </div>
     <div class="col-right">
-        <img src="<?php echo  WP_SITEURL; ?>/wp-content/plugins/mm-lifterlms-addons/icons/video-icon.svg" />
+        <img src="<?php echo  WP_SITEURL; ?>/wp-content/plugins/mm-lifterlms-addons/images/icons/video-icon.svg" />
     </div>
   </div>
 
@@ -17,7 +17,7 @@
     <!--  <input id="file" type="file" name="file" size="30" accept="file_extension|audio/*" />-->
     </div>
     <div class="col-right">
-      <img src="<?php echo  WP_SITEURL; ?>/wp-content/plugins/mm-lifterlms-addons/icons/audio-icon.svg" />
+      <img src="<?php echo  WP_SITEURL; ?>/wp-content/plugins/mm-lifterlms-addons/images/icons/audio-icon.svg" />
    </div>
   </div>
 
@@ -29,7 +29,7 @@
     <!--  <input id="file" type="file" name="file" size="30" accept="file_extension|image/jpg,image/png,image/jpeg,image/gif" />-->
     </div>
     <div class="col-right">
-      <img src="<?php echo  WP_SITEURL; ?>/wp-content/plugins/mm-lifterlms-addons/icons/img-icon.svg" />
+      <img src="<?php echo  WP_SITEURL; ?>/wp-content/plugins/mm-lifterlms-addons/images/icons/img-icon.svg" />
    </div>
   </div>
 
@@ -41,7 +41,7 @@
       <p>Drop document files here for uploading</p>
     </div>
     <div class="col-right">
-      <img src="<?php echo  WP_SITEURL; ?>/wp-content/plugins/mm-lifterlms-addons/icons/file-icon.svg" />
+      <img src="<?php echo  WP_SITEURL; ?>/wp-content/plugins/mm-lifterlms-addons/images/icons/file-icon.svg" />
 
     </div>
   </div>

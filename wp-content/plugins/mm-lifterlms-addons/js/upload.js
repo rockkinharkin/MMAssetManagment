@@ -42,37 +42,38 @@ jQuery(document).ready( function($)
        Id = $(this).attr('id');
        var file = e.dataTransfer.files[0];
        var fileReader = new FileReader();
+       var image_data = event.target.result;
 
        fileReader.onload = (function(file) {
          return function(event) {
-           // Preview
-           filename = file.name;
-           // if file is an image
-           var image_data = event.target.result;
-
            $('<p class="file">'+file.name+'</p>').appendTo(this_obj);
+
            if( Id == 'img-leftCol'){
-             $('<img style="max-width: 200px; max-height: 200px;" src="' + event.target.result + '">').appendTo(this_obj);
+             $('<img id="'+file.name+'" style="max-width: 200px; max-height: 200px;" src="' + event.target.result + '">').appendTo(this_obj);
            }
-           console.log('ok');
-         };
+         }
         })(file);
        fileReader.readAsDataURL(file);
 
        var assetId = GetURLParameter('course_id');
        var assetSlug = GetURLParameter('course_slug');
-       var data= { 'action': 'upload_files',
-                    'file': file.name,
-                    'base64': image_data,
-                    'assetid': assetId,
-                    'assetslug': assetSlug };
+       var imagedata = $('img #'+file.name).attr('src');
+       var filename = $('img #'+file.name).attr('id');
 
-        // Upload file
-       $('#upload-files').on('click', function(e){
-         $.post( ajax_url,data, function(response){
-             alert(response);
-           });
-       });
+       var data= { 'action': 'upload_files',
+                   'assetid': assetId,
+                   'assetslug': assetSlug.toString(),
+                   'file': '415_7_crayola-experience-entrance_28_08_2018.gif',
+                   'imagedata':'data:image/gif;base64,IVURHSKNDSKknsdoiUHJK',
+                   'nonce': ajax_data.nonce
+                 };
+         // Upload file
+        $('#upload-files').on('click', function(e){
+          console.log(data);
+          $.post( ajax_url,data,function(response){
+              alert(response);
+            });
+        });
        return false;
      }
    });
