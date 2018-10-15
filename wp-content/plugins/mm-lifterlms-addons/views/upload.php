@@ -42,7 +42,6 @@
     </div>
     <div class="col-right">
       <img src="<?php echo  WP_SITEURL; ?>/wp-content/plugins/mm-lifterlms-addons/images/icons/file-icon.svg" />
-
     </div>
   </div>
   <div class="action-buttons"><button id="upload-files" class="button">Upload files</button></div>

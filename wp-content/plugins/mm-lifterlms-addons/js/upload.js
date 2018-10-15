@@ -61,18 +61,19 @@ jQuery(document).ready( function($)
 
        // Upload file
        $('#upload-files').on('click', function(e){
-         var $data = { 'action': 'upload_files',
+         var data = { 'action': 'upload_files',
                      'assetid': assetId,
                      'assetslug': assetSlug.toString(),
                      'nonce': ajax_data.nonce
                    };
-         $('.dropzone-images img').each(function(this){
-           filename = this.attr('id');
+         $('#dropzone-images img').each(function(el){
+           filename = $(this).attr('id');
            imagefile = $(this).attr('src');
+           console.log(filename, imagefile);
              data.push({'file': filename, 'imagedata': imagefile});
          });
 
-         console.log(data);
+        // console.log(data);
 
         $.post( ajax_url,data,function(response){
             alert(response);
