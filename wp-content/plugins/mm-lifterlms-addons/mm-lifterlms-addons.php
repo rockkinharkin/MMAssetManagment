@@ -14,6 +14,10 @@
 */
 
 defined( 'ABSPATH' ) or die ('Unauthorised Access');
+
+use Aws\S3\S3Client;
+use Aws\S3\Exception\S3Exception;
+
 class MM_LifterLMS_AddOns {
 
   function __construct(){
@@ -24,6 +28,7 @@ class MM_LifterLMS_AddOns {
   }
 
   public function aws_requires(){
+    require  ABSPATH.'vendor/autoload.php';
     require_once ABSPATH.'wp-content/plugins/mm-lifterlms-addons/config.php';
     require_once ABSPATH.'wp-content/plugins/mm-lifterlms-addons/controllers/class.aws-resources.php';
   }
@@ -37,7 +42,10 @@ class MM_LifterLMS_AddOns {
       add_action( 'add_meta_boxes', array($this,'wpdocs_register_meta_boxes' ));
       add_action( 'save_post', array($this,'wpdocs_save_meta_box' ));
       add_action( 'admin_menu', array($this,'mm_upload_asset_register' )); // Upload Asset View
-      add_action( 'wp_ajax_upload_files', array( $this,'upload_files') );
+
+      if( is_admin() === true ){ // must have this condition to execute ajax in admin area
+        add_action( 'wp_ajax_upload_files', array( $this,'upload_files') );
+      }
   }
 
   // load scripts
@@ -119,13 +127,17 @@ class MM_LifterLMS_AddOns {
       echo '</div>';
   }
 
-  public function upload_files($action=NULL, $assetid=0, $assetslug=NULL, $filename=NULL,$imagedata=NULL,$nonce){
+  public function upload_files(){
     check_ajax_referer( 'upload_files_nonce', 'nonce' ); // verifies the call to function
-    echo "inside upload files";
-    if( $action == 'upload_file' ){
-      $aws = new AWS_GetResources;
-      return $aws->standardUpload($assetid,$assetslug,$imagedata,$filename);
-    }
+
+    $assetid=$_POST['assetid'];
+    $assetslug=$_POST['assetslug'];
+    $imagedata=$_POST['imagedata'];
+    $filename=$_POST['file'];
+
+    $aws = new AWS_GetResources;
+    echo $aws->standardUpload($assetid,$assetslug,$imagedata,$filename);
+    ob_clean();
     wp_die(); // prevent 0 output
   }
 }
