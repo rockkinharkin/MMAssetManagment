@@ -38,25 +38,31 @@ command line for php upload.
 php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
 
 */
-  public function standardUpload($assetid=0, $assetslug=NULL,$filename=NULL,$imagedata=NULL){
+  public function standardUpload($assetid=0, $assetslug=NULL,$filename=NULL,$file=NULL,$imagedata=NULL){
 
+    error_log($assetid.'<br><br>'.$assetslug.'<br><br>'.$filename);
     error_log("SU::top");
     $result   = NULL;
     $keyName  = $assetid.'_'.$assetslug.'/';
     $path     = S3URL.'/'.BUCKNAME.'/'.$keyName;
+    $filetype = $this->checkFileType($filename);
+    $filename = $assetid.'_'.$assetslug.'_'.$filename;
 
     // check the filetype to determine the directory the file should be saved in.
-    if( $d=$this->checkFileType($filename) !== '' ){
-      $path=$path.$d;
-      error_log("SU::checkFileType");
+    if( $filetype !== '' ){
+      $path=$path.$filetype;
+      error_log("SU::checkFileType".$path);
     }
 
-    if( $this->checkFileType($filename) == 'video' ){
+    if( $filetype == 'video' ){
       error_log("SU::IfFileTypeVideo");
       return $this->largeUpload($filename,$asset,$path);
     }else{
       try {
         error_log("SU::startS3Upload");
+         if($filetype == 'images' && $imagedata != NULL){
+           $filename = $imagedata;
+         }
   		    $result = $this->s3->putObject( array('Bucket'=>$this->bucket,
                                   'Key' =>$path,
                                   'SourceFile' => $filename,

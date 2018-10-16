@@ -14,9 +14,6 @@
   margin:5px;
   width: 90%;
 }
-.dropzone p{
-  font-size: 22pt;
-}
 .dropzone.highlight{
   background-color: lightBlue;
 }
@@ -35,9 +32,12 @@
   background-image: url('./css/icons/file-icon.svg');
 }
 .dropzone p {
-  font-size: 2.5em;
+  font-size: 1.5em;
   padding-top: 1em;
   margin:0;
+}
+.dropzone .file{
+  font-size:0.5em;
 }
 .dropzone .col-left{
   width:70%;

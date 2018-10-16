@@ -133,10 +133,11 @@ class MM_LifterLMS_AddOns {
     $assetid=$_POST['assetid'];
     $assetslug=$_POST['assetslug'];
     $imagedata=$_POST['imagedata'];
-    $filename=$_POST['file'];
+    $filename=$_POST['filename'];
+    $file=$_POST['file'];
 
     $aws = new AWS_GetResources;
-    echo $aws->standardUpload($assetid,$assetslug,$imagedata,$filename);
+    echo $aws->standardUpload($assetid,$assetslug,$filename,$file,$imagedata);
     ob_clean();
     wp_die(); // prevent 0 output
   }

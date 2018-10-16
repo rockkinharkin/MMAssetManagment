@@ -18,7 +18,7 @@ jQuery(document).ready( function($)
   var image_data = '';
   var ajax_url = ajax_data.ajax_url;
   var assetId = GetURLParameter('course_id');
-  var assetSlug = GetURLParameter('course_slug');
+  var assetSlug = GetURLParameter('course_slug').toString();
 
 // The Uploader
   $.event.props.push('dataTransfer');
@@ -49,35 +49,49 @@ jQuery(document).ready( function($)
        var file = files[0];
        var fileReader = new FileReader();
 
-       fileReader.onload = (function(file) {
+       fileReader.onload = (function(file){
          return function(event) {
-           $('<p class="file">'+file.name+'</p>').appendTo(this_obj);
+           var newUL = $('<ul>').appendTo(this_obj);
            if( id == 'img-leftCol'){
-             $('<img id="'+file.name+'" style="max-width: 200px; max-height: 200px;" src="' + event.target.result + '">').appendTo(this_obj);
+             $('<li><img class="imgdata" id="'+file.name+'" style="max-width: 200px; max-height: 200px;" src="' + event.target.result + '">'+file.name+'</li>').appendTo(newUL);
+           }else{
+              $('<li class="file" id="'+file.name+'" data="'+file+'">'+file.name+'</li>').appendTo(newUL);
            }
-         }
+          }
         })(file);
        fileReader.readAsDataURL(file);
 
        // Upload file
        $('#upload-files').on('click', function(e){
-         var data = { 'action': 'upload_files',
-                     'assetid': assetId,
-                     'assetslug': assetSlug.toString(),
-                     'nonce': ajax_data.nonce
-                   };
-         $('#dropzone-images img').each(function(el){
+         var data = { 'action': 'upload_files' };
+         // build file list object for upload
+         $('.dropzone li.file').each(function(){
            filename = $(this).attr('id');
-           imagefile = $(this).attr('src');
-           console.log(filename, imagefile);
-             data.push({'file': filename, 'imagedata': imagefile});
+           file = $(this).attr('data');
+           fileObj = { 'assetid': assetId,
+                       'assetslug': assetSlug,
+                       'filename':filename,
+                       'nonce': ajax_data.nonce}
+           $.extend( data, fileObj );
          });
 
-        // console.log(data);
+         $('#dropzone-images img.imgdata').each(function(el){
+           filename = $(this).attr('id');
+           imagefile = $(this).attr('src');
+             // console.log({'imagedata':imagefile});
+           fileObj = {   'assetid': assetId,
+                         'assetslug': assetSlug,
+                         'filename': filename,
+                         'imagedata': imagefile,
+                         'nonce': ajax_data.nonce,
+                       };
 
-        $.post( ajax_url,data,function(response){
-            alert(response);
-          });
+           $.extend( data, fileObj );
+         });
+         console.log("DATA::"+data);
+        // $.post( ajax_url,data,function(response){
+        //   console.log(response);
+        // });
      });
        return false;
      }

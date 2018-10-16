@@ -3,6 +3,7 @@
   <div class="dropzone" id="dropzone-video">
     <div class="col-left" id="vid-leftCol">
       <p>Drop video files here for uploading</p>
+      <ul id="vid-list"></ul>
       <!--input id="file" type="file" name="file" size="30" accept="file_extension|video/*" />-->
     </div>
     <div class="col-right">
