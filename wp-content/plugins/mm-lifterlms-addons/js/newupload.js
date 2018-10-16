@@ -1,3 +1,30 @@
+// build file list object for upload
+// //  $('.dropzone li.file').each(function(){
+// //    filename = $(this).attr('id');
+// //    fileObj = { 'assetid': assetId,
+// //                'assetslug': assetSlug,
+// //                'filename':filename,
+// //                'nonce': ajax_data.nonce}
+// //    $.extend( data, fileObj );
+// //  });
+// // console.log(data);
+//
+//  $('#dropzone-images img.imgdata').each(function(el){
+//    filename = $(this).attr('id');
+//    imagefile = $(this).attr('src');
+//      // console.log({'imagedata':imagefile});
+//    fileObj = {   'assetid': assetId,
+//                  'assetslug': assetSlug,
+//                  'filename': filename,
+//                  'imagedata': imagefile,
+//                  'nonce': ajax_data.nonce,
+//                };
+//
+//    $.extend( data, fileObj );
+//  });
+// console.log(data);
+
+
 jQuery(document).ready( function($){
 
   function GetURLParameter(sParam){

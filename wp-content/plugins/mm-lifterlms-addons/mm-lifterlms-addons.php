@@ -132,11 +132,19 @@ class MM_LifterLMS_AddOns {
 
     $assetid=$_POST['assetid'];
     $assetslug=$_POST['assetslug'];
-    $imagedata=$_POST['imagedata'];
-    $filename=$_POST['filename'];
-
+    $files= $_POST['filelist'];
     $aws = new AWS_GetResources;
-    echo $aws->standardUpload($assetid,$assetslug,$filename,$filedata);
+
+    $count = 0;
+    foreach( $files as $f ){
+      $filedata=$f['filedata'];
+      $filename=$f['filename'];
+        error_log( $f['filename']." start processing");
+      echo $aws->standardUpload($assetid,$assetslug,$filename,$filedata);
+      $count++;
+        error_log( $f['filename']." has being processed");
+    }
+    error_log($count.' files have been processed');
     ob_clean();
     wp_die(); // prevent 0 output
   }
