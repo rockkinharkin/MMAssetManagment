@@ -38,7 +38,7 @@ command line for php upload.
 php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
 
 */
-  public function standardUpload($assetid=0, $assetslug=NULL,$filename=NULL,$file=NULL,$imagedata=NULL){
+  public function standardUpload($assetid=0, $assetslug=NULL,$filename=NULL,$filedata=NULL){
 
     error_log($assetid.'<br><br>'.$assetslug.'<br><br>'.$filename);
     error_log("SU::top");
@@ -46,7 +46,7 @@ php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
     $keyName  = $assetid.'_'.$assetslug.'/';
     $path     = S3URL.'/'.BUCKNAME.'/'.$keyName;
     $filetype = $this->checkFileType($filename);
-    $filename = $assetid.'_'.$assetslug.'_'.$filename;
+    $newfilename = $assetid.'_'.$assetslug.'_'.$filename;
 
     // check the filetype to determine the directory the file should be saved in.
     if( $filetype !== '' ){
@@ -56,16 +56,14 @@ php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
 
     if( $filetype == 'video' ){
       error_log("SU::IfFileTypeVideo");
-      return $this->largeUpload($filename,$asset,$path);
+      return $this->largeUpload($filename,$asset,$path,$filedata);
     }else{
       try {
         error_log("SU::startS3Upload");
-         if($filetype == 'images' && $imagedata != NULL){
-           $filename = $imagedata;
-         }
+
   		    $result = $this->s3->putObject( array('Bucket'=>$this->bucket,
                                   'Key' =>$path,
-                                  'SourceFile' => $filename,
+                                  'SourceFile' => $filedata,
                                   'StorageClass' => 'REDUCED_REDUNDANCY',
                                   'ACL' =>'public-read'	)	);
           error_log("SU::PassedS3Upload");
@@ -80,7 +78,7 @@ php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
 }
 
 // s3 part uploader for files over 5GB.
-  public function largeUpload(array $files, array $assets,$directory='images'){
+  public function largeUpload($filename=NULL, $asset=NULL,$path=NULL,$filedata=NULL){
 
   }
 
