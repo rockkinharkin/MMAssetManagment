@@ -20,7 +20,7 @@ jQuery(document).ready( function($)
   var assetId = GetURLParameter('course_id');
   var assetSlug = GetURLParameter('course_slug').toString();
   var filelist = [];
-  var data = { 'action': 'upload_files',  'assetid': assetId, 'assetslug': assetSlug, 'filelist':filelist };
+  var data = { 'action': 'upload_files',  'assetid': assetId, 'assetslug': assetSlug, 'filelist':filelist, 'nonce': ajax_data.nonce };
 
 // The Uploader
   $.event.props.push('dataTransfer');
