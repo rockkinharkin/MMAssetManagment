@@ -45,6 +45,7 @@ class MM_LifterLMS_AddOns {
 
       if( is_admin() === true ){ // must have this condition to execute ajax in admin area
         add_action( 'wp_ajax_upload_files', array( $this,'upload_files') );
+        add_action( 'wp_ajax_upload_directory', array( $this,'upload_directory') );
       }
   }
 
@@ -55,8 +56,10 @@ class MM_LifterLMS_AddOns {
     if ( strpos( $screen->base, 'toplevel_page_mm-upload-asset') !== false ){
      wp_enqueue_style( 'mmaddon-styles', plugins_url('css/style.css',__FILE__ ) );
      wp_enqueue_script( 'mmaddon-script', plugins_url('js/upload.js',__FILE__ ), ['jquery'], '1.0.0', true );
+
      // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.your_keyname_1,ajax_object.your_keyname_2 etc..
 	   wp_localize_script( 'mmaddon-script', 'ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( "upload_files_nonce" ) ) );
+      wp_localize_script( 'mmaddon-script', 'ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( "upload_directory_nonce" ) ) );
 
    }
   }
@@ -118,6 +121,24 @@ class MM_LifterLMS_AddOns {
 
       echo '<div class="wrap">';
       echo "<h1>$title for ". $post->post_title."</h1>";
+      echo "  <div>
+          <h2>Please copy and paste the filepath the directory you wish to upload below</h2>
+          <h2> Directory Structure</h2>
+          <div id='directorystructure'>
+          <p> below details the structure convention of the directory being uploaded to the AWS S3 bucket.<br>
+          Please follow this convention when uploading assets as the websites 'Resources' widget
+          relies on this convention to feed the files back to the user when they access to a course
+          and its assets.</p>
+            <ul>
+              <li>".$post->ID."_".$post->post_title." - ( Main Directory )</li>
+              <li>- docs   ( sub directory )</li>
+              <li> -- file_1.docx</li>
+              <li> -- file_2.txt</li>
+              <li>- images ( sub directory )</li>
+              <li>- videos ( sub directory )</li>
+              <li>- audio  ( sub directory )</li>
+            </ul>
+          </div>";
 
       //$file = plugin_dir_path( __FILE__ ) . "/third-party/s3.fine-uploader/templates/simple-thumbnails.html";
       $file = plugin_dir_path( __FILE__ ) . "/views/upload.php";
@@ -133,14 +154,20 @@ class MM_LifterLMS_AddOns {
     $assetid=$_POST['assetid'];
     $assetslug=$_POST['assetslug'];
     $files= $_POST['filelist'];
+
     $aws = new AWS_GetResources;
 
     $count = 0;
     foreach( $files as $f ){
-      $filedata=$f['filedata'];
+      $audio=$f['audio'];
+      $docs=$f['docs'];
+      $imgs=$f['images'];
+      $video=$f['videos'];
+
       $filename=$f['filename'];
         error_log( $f['filename']." start processing");
-      echo $aws->standardUpload($assetid,$assetslug,$filename,$filedata);
+        $aws->standardUpload($assetid,$assetslug,$filepath);
+
       $count++;
         error_log( $f['filename']." has being processed");
     }
@@ -148,5 +175,20 @@ class MM_LifterLMS_AddOns {
     ob_clean();
     wp_die(); // prevent 0 output
   }
+  public function upload_directory(){
+    check_ajax_referer( 'upload_directory_nonce', 'nonce' ); // verifies the call to function
+
+    $aws = new AWS_GetResources;
+    $assetid=$_POST['assetid'];
+    $assetslug=$_POST['assetslug'];
+    $filepath=$_POST['filepath'];
+
+    echo $aws->fullUpload($assetid,$assetslug,$filepath);
+
+    error_log( $f['filename']." has being processed");
+    ob_clean();
+    wp_die(); // prevent 0 output
+  }
 }
+
 ?>

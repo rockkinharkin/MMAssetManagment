@@ -29,6 +29,21 @@ class AWS_GetResources{
     return $files;
   }
 
+  public function fullUpload($assetid=0, $assetslug=NULL,$filepath=NULL){
+    $keyPrefix = $assetid.'_'.$assetslug;
+    try {
+      error_log("inside FUllUPload".$assetid);
+      $this->s3->uploadDirectory( $filepath, $this->bucket, $keyPrefix, array(
+        'params'      => array('ACL' => 'public-read'),
+        'concurrency' => 20,
+        'debug'       => true,
+        'force'       => true ));
+      } catch(s3Exception $e){
+        error_log("fullUpload s3Error:::".$e);
+      }
+  }
+
+
 /*
 @Function Name: standardUpload()
 @vars: [ $action=NULL, $assetid=0, $assetslug=NULL, $base64=NULL,$filename=NULL ]
@@ -36,35 +51,44 @@ class AWS_GetResources{
 should be used for files over 4.99 GB - as they require the aws part uploader.
 command line for php upload.
 php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
-
+$filename=NULL,$filedata=NULL
 */
-  public function standardUpload($assetid=0, $assetslug=NULL,$filename=NULL,$filedata=NULL){
+  public function standardUpload($assetid=0, $assetslug=NULL,$filepath){
 
-    error_log($assetid.'<br><br>'.$assetslug.'<br><br>'.$filename);
-    error_log("SU::top");
     $result   = NULL;
-    $keyName  = $assetid.'_'.$assetslug.'/';
+    $keyName  = $assetid.'_'.$assetslug;
+    $filename = preg_replace('/^.+\\\\/', '', $filepath);
+      error_log($assetid.'<br><br>'.$assetslug);
+      die();
     //$path     = S3URL.'/'.BUCKNAME.'/'.$keyName;
-    $path     = $keyName;
     $filetype = $this->checkFileType($filename);
     $newfilename = $assetid.'_'.$assetslug.'_'.$filename;
 
-    // check the filetype to determine the directory the file should be saved in.
-    if( $filetype !== '' ){
-      $path=$path.$filetype;
-      error_log("SU::checkFileType".$path);
+    if( $this->s3->doesobjectExist(BUCKNAME,$keyname) != true ){
+        $this->s3->putObject( array('Bucket'=>$this->bucket,
+                              'Key' =>$keyname,
+                              'StorageClass' => 'STANDARD',
+                              'ACL' =>'public-read'	)	);
+        $this->s3->waitUntil('BucketExists', array('Bucket' => $keyname));
     }
 
-    if( $filetype == 'video' ){
-      error_log("SU::IfFileTypeVideo");
-      return $this->largeUpload($filename,$asset,$path,$filedata);
-    }else{
+
+    // check the filetype to determine the directory the file should be saved in.
+    if( $filetype !== '' ){
+      $keyname=$keyname.'/'.$filetype;
+      error_log("SU::checkFileType>>".$path);
+    }
+
+    // if( $filetype == 'video' ){
+    //   error_log("SU::IfFileTypeVideo");
+    //   return $this->largeUpload($filename,$asset,$path,$filedata);
+    // }else{
       try {
-        error_log("SU::startS3Upload");
+        error_log("SU::startS3Upload:::".$filepath);
 
   		    $result = $this->s3->putObject( array('Bucket'=>$this->bucket,
-                                  'Key' =>$path,
-                                  'SourceFile' => $filedata,
+                                  'Key' =>$keyname,
+                                  'SourceFile' => $filepath,
                                   'StorageClass' => 'STANDARD',
                                   'ACL' =>'public-read'	)	);
           error_log("SU::PassedS3Upload");
@@ -78,11 +102,6 @@ php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
   }
   wp_die(); // prevent 0 output
 }
-
-// s3 part uploader for files over 5GB.
-  public function largeUpload($filename=NULL, $asset=NULL,$path=NULL,$filedata=NULL){
-
-  }
 
   /**===== HELPER FUNCTIONS=== **/
 
