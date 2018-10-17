@@ -44,7 +44,8 @@ php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
     error_log("SU::top");
     $result   = NULL;
     $keyName  = $assetid.'_'.$assetslug.'/';
-    $path     = S3URL.'/'.BUCKNAME.'/'.$keyName;
+    //$path     = S3URL.'/'.BUCKNAME.'/'.$keyName;
+    $path     = $keyName;
     $filetype = $this->checkFileType($filename);
     $newfilename = $assetid.'_'.$assetslug.'_'.$filename;
 
@@ -64,12 +65,13 @@ php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
   		    $result = $this->s3->putObject( array('Bucket'=>$this->bucket,
                                   'Key' =>$path,
                                   'SourceFile' => $filedata,
-                                  'StorageClass' => 'REDUCED_REDUNDANCY',
+                                  'StorageClass' => 'STANDARD',
                                   'ACL' =>'public-read'	)	);
           error_log("SU::PassedS3Upload");
           return $result['ObjectURL'] . PHP_EOL;
   	  } catch (S3Exception $e) {
         error_log("SU::s3UploadException");
+        error_log($e->getMessage() . PHP_EOL);
   		    $result = $e->getMessage() . PHP_EOL;
       }
       return $result;
