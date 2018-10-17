@@ -153,23 +153,49 @@ class MM_LifterLMS_AddOns {
 
     $assetid=$_POST['assetid'];
     $assetslug=$_POST['assetslug'];
-    $files= $_POST['filelist'];
+    $files= $_POST['filelist']; // array of arrays
 
     $aws = new AWS_GetResources;
 
     $count = 0;
     foreach( $files as $f ){
+      // each on is an array of filepaths
       $audio=$f['audio'];
       $docs=$f['docs'];
       $imgs=$f['images'];
-      $video=$f['videos'];
+      $vids=$f['videos'];
 
-      $filename=$f['filename'];
-        error_log( $f['filename']." start processing");
-        $aws->standardUpload($assetid,$assetslug,$filepath);
+      foreach($imgs as $im){
+        $filepath=$im;
+        if( $filepath !='' ){
+          $aws->standardUpload($assetid,$assetslug,$filepath);
+          $count++;
+        }
+      }
 
-      $count++;
-        error_log( $f['filename']." has being processed");
+      foreach($docs as $d){
+        $filepath=$d;
+        if( $filepath !='' ){
+          $aws->standardUpload($assetid,$assetslug,$filepath);
+          $count++;
+        }
+      }
+
+      foreach($audio as $a){
+        $filepath=$a;
+        if( $filepath !='' ){
+          $aws->standardUpload($assetid,$assetslug,$filepath);
+          $count++;
+        }
+      }
+
+      foreach($vids as $v){
+        $filepath=$v;
+        if( $filepath !='' ){
+          $aws->standardUpload($assetid,$assetslug,$filepath);
+          $count++;
+        }
+      }
     }
     error_log($count.' files have been processed');
     ob_clean();

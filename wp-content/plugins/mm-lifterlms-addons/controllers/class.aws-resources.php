@@ -58,13 +58,19 @@ $filename=NULL,$filedata=NULL
     $result   = NULL;
     $keyName  = $assetid.'_'.$assetslug;
     $filename = preg_replace('/^.+\\\\/', '', $filepath);
-      error_log($assetid.'<br><br>'.$assetslug);
-      die();
-    //$path     = S3URL.'/'.BUCKNAME.'/'.$keyName;
+
+    error_log($assetid.'<br><br>'.$assetslug);
+    die();
+
     $filetype = $this->checkFileType($filename);
     $newfilename = $assetid.'_'.$assetslug.'_'.$filename;
 
-    if( $this->s3->doesobjectExist(BUCKNAME,$keyname) != true ){
+    // check the filetype to determine the directory the file should be saved in.
+    if( $filetype !== '' ){  $keyname=$keyname.'/'.$filetype; error_log("SU::checkFileType>>".$keyname); }
+
+
+    if( $this->s3->doesobjectExist(BUCKNAME,$keyname) == false ){
+
         $this->s3->putObject( array('Bucket'=>$this->bucket,
                               'Key' =>$keyname,
                               'StorageClass' => 'STANDARD',
@@ -73,17 +79,11 @@ $filename=NULL,$filedata=NULL
     }
 
 
-    // check the filetype to determine the directory the file should be saved in.
-    if( $filetype !== '' ){
-      $keyname=$keyname.'/'.$filetype;
-      error_log("SU::checkFileType>>".$path);
-    }
-
     // if( $filetype == 'video' ){
     //   error_log("SU::IfFileTypeVideo");
     //   return $this->largeUpload($filename,$asset,$path,$filedata);
     // }else{
-      try {
+    try {
         error_log("SU::startS3Upload:::".$filepath);
 
   		    $result = $this->s3->putObject( array('Bucket'=>$this->bucket,
@@ -91,15 +91,16 @@ $filename=NULL,$filedata=NULL
                                   'SourceFile' => $filepath,
                                   'StorageClass' => 'STANDARD',
                                   'ACL' =>'public-read'	)	);
+
           error_log("SU::PassedS3Upload");
           return $result['ObjectURL'] . PHP_EOL;
+
   	  } catch (S3Exception $e) {
         error_log("SU::s3UploadException");
         error_log($e->getMessage() . PHP_EOL);
   		    $result = $e->getMessage() . PHP_EOL;
       }
       return $result;
-  }
   wp_die(); // prevent 0 output
 }
 

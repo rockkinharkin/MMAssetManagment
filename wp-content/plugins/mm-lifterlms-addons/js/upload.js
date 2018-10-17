@@ -65,11 +65,10 @@ jQuery(document).ready( function($)
   });
 
 
-
-// C:\Users\Racha\OneDrive\Documents\Projects\Makematic\testdata\assets\457_creative-learning\video\shortvid.mp4
-// C:\Users\Racha\OneDrive\Documents\Projects\Makematic\testdata\assets\457_creative-learning\audio\415_1_creative-learning-0.7mb_26-08-2015.mp3
-// C:\Users\Racha\OneDrive\Documents\Projects\Makematic\testdata\assets\457_creative-learning\images\plan-your-visit.jpg
-// C:\Users\Racha\OneDrive\Documents\Projects\Makematic\testdata\assets\457_creative-learning\docs\415_10_Crayola-Terms-Of-Use_26-08-2018.rtf
+C:\Users\Racha\OneDrive\Documents\Projects\Makematic\testdata\assets\457_creative-learning\video\shortvid.mp4'];
+C:\Users\Racha\OneDrive\Documents\Projects\Makematic\testdata\assets\457_creative-learning\audio\415_1_creative-learning-0.7mb_26-08-2015.mp3'];
+C:\Users\Racha\OneDrive\Documents\Projects\Makematic\testdata\assets\457_creative-learning\images\plan-your-visit.jpg
+C:\Users\Racha\OneDrive\Documents\Projects\Makematic\testdata\assets\457_creative-learning\docs\415_10_Crayola-Terms-Of-Use_26-08-2018.rtf
 
 // The Uploader
   // $.event.props.push('dataTransfer');
