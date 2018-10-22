@@ -42,3 +42,19 @@ function add_login_logout_link($items, $args) {
         $items .= '<li>'. $loginoutlink .'</li>';
     return $items;
 }
+
+remove_filter( 'lifterlms_single_course_after_summary', 'lifterlms_template_course_author', 40 );
+
+if ( ! function_exists( 'load_mm_resources_widget' ) ) {
+  add_filter( 'llms_course_meta_info_title', 'load_mm_resources_widget', 40 );
+
+  function load_mm_resources_widget(){
+    global $post;
+    $p = (array)$post;
+    $p['title']="RESOURCES";
+  //  print_r($p);
+    $widget = new MM_Asset_Widget();
+    $content = $widget->widget(NULL,$p);
+    echo __( $content, 'MM_Asset_widget' );
+   }
+}

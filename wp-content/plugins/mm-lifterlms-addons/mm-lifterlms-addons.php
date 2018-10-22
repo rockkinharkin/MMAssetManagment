@@ -59,8 +59,8 @@ class MM_LifterLMS_AddOns {
 
      // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.your_keyname_1,ajax_object.your_keyname_2 etc..
 	   wp_localize_script( 'mmaddon-script', 'ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( "upload_files_nonce" ) ) );
-      wp_localize_script( 'mmaddon-script', 'ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( "upload_directory_nonce" ) ) );
-
+     wp_localize_script( 'mmaddon-script', 'ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( "upload_directory_nonce" ) ) );
+    
    }
   }
 
@@ -211,7 +211,7 @@ class MM_LifterLMS_AddOns {
 
     echo $aws->fullUpload($assetid,$assetslug,$filepath);
 
-    error_log( $f['filename']." has being processed");
+  //  error_log( $f['filename']." has being processed");
     ob_clean();
     wp_die(); // prevent 0 output
   }

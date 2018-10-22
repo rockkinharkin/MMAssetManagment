@@ -144,6 +144,20 @@ $filename=NULL,$filedata=NULL
     return $dir;
   }
 
+  public function getPresignedUrl(){
+    //Creating a presigned URL
+    $cmd = $this->s3->getCommand('putObject', [
+        'Bucket' => $this->bucket,
+        'Key' => $this->s3key
+    ]);
+
+    $request = $this->s3->createPresignedRequest($cmd, '+30 minutes');
+
+    // Get the actual presigned-url
+    $presignedUrl = (string)$request->getUri();
+    return $presignedUrl;
+  }
+
 }
 
 ?>

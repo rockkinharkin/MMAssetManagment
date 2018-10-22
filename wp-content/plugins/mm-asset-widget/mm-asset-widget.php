@@ -86,7 +86,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       echo __( $content, 'MM_Asset_widget' );
       echo $args['after_widget'];
     }
-
+    
     /**
   	 * Outputs the options form on admin
   	 *
