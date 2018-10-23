@@ -18,7 +18,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
 
     function __construct() {
       $this->requires();
-      $this->register_scripts();
+      $this->hooks();
 
       $this->s3ResUrl     = BUCKURL;
       $this->audioSubDir  = '/audio/';
@@ -34,12 +34,26 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
   		parent::__construct( 'MM_Asset_Widget', 'MM Asset Widget', $widget_ops );
     }
 
-    /**
-  	 * Outputs the content of the widget
-  	 *
-  	 * @param array $args
-  	 * @param array $instance
-  	 */
+    public function hooks(){
+      add_action( 'wp_enqueue_scripts', array( $this, 'mm_asset_widget_scripts' ) );
+    }
+
+    public function mm_asset_widget_scripts() {
+       // css files
+       wp_register_style( 'mmawidget-styles', plugins_url('css/mmawidget-styles.css',__FILE__ ) );
+       wp_enqueue_style( 'mmawidget-styles');
+
+       // js files
+       wp_register_script( 'mmawidget-script', plugins_url('js/mmawidget.js',__FILE__ ), ['jquery','jquery-ui-core','jquery-ui-accordian'], '1.0.0', true );
+       wp_enqueue_script( 'mmawidget-script');
+    }
+
+  /**
+	 * Outputs the content of the widget
+	 *
+	 * @param array $args
+	 * @param array $instance
+	 */
     public function widget( $args, $instance ) {
       $content = "";
       $queried_object = get_queried_object();
@@ -61,32 +75,30 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
 
       if( is_user_logged_in() ){
         $memberships = new MM_Assets_LLMS_Memberships();
-      //  $membership = $memberships->UserHasMembership( get_current_user_id() );
+        //$membership = $memberships->UserHasMembership( get_current_user_id() );
+        //echo "WIDGET CALL:::".print_r($membership['_has_membership']);
 
-            //echo "WIDGET CALL:::".print_r($membership['_has_membership']);
-          //  need to check for licence here also.
-          ////
+          //  checking for licence here.
           if( ( in_array('administrator',$this->currentUser->roles) ) || ( $memberships->isUserEnrolled( $wpasset->ID) == 'is-enrolled' ) ){
             // before and after widget arguments are defined by themes
-          if ( ! empty( $title ) )
-            echo $args['before_title'] . $title . $args['after_title'];
-
-          $content .= '<div class="mm-container">';
-          $content .= $this->buildVideoList($wpasset);
-          $content .= $this->buildAudioList($wpasset);
-          $content .= $this->buildImageList($wpasset);
-          $content .= $this->buildDocsList($wpasset);
-          $content .= '</div>';
-
-        }else{
-          $content .= '<div class="widget" id="message"><br><p>Purchase a licence and gain further access to more resources for this course.</p>';
-          $content .= '<br><a class="llms-button-action button" href="/become-a-member">I WANT A LICENCE</a></div>';
+            if ( ! empty( $title ) ){
+              echo $args['before_title'] . $title . $args['after_title'];
+            }
+            $content .= '<div class="mm-container">';
+            $content .= $this->buildVideoList($wpasset);
+            $content .= $this->buildAudioList($wpasset);
+            $content .= $this->buildImageList($wpasset);
+            $content .= $this->buildDocsList($wpasset);
+            $content .= '</div>';
+          }else{
+            $content .= '<div class="widget" id="message"><br><p>Purchase a licence and gain further access to more resources for this course.</p>';
+            $content .= '<br><a class="llms-button-action button" href="/become-a-member">I WANT A LICENCE</a></div>';
         }
       }
       echo __( $content, 'MM_Asset_widget' );
       echo $args['after_widget'];
     }
-    
+
     /**
   	 * Outputs the options form on admin
   	 *
@@ -124,8 +136,9 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       return $instance;
     }
 
-  //=======================================================================================================//
-  //=========================================== HELPER METHODS ==========================================//
+
+    //=======================================================================================================//
+    //=========================================== HELPER METHODS ==========================================//
 
     private function requires(){
       if( in_array( 'mm-lifterlms-addons/mm-lifterlms-addons.php', get_option('active_plugins') ) == 1 ){
@@ -134,18 +147,6 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       }
       require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/llms-memberships.php'; // to check memberships#
       //require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/shortcodes.php';
-    }
-
-    public function mm_asset_widget_scripts() {
-       wp_enqueue_style( 'mmawidget-styles', plugins_url('css/mmawidget-styles.css',__FILE__ ) );
-       wp_enqueue_script( 'mmawidget-script', plugins_url('js/mmawidget.js',__FILE__ ), ['jquery'], '1.0.0', true );
-    }
-
-    public function register_scripts(){
-      $a = in_array( 'lifterlms/lifterlms.php',get_option('active_plugins') );
-      if( ( $a == 1 ) && ( !is_admin() ) ) {       // load scripts for widget frontend
-        add_action( 'wp_enqueue_scripts', array($this,'mm_asset_widget_scripts' ) );
-      }
     }
 
     private function prepareS3FileObject($folder=NULL){
@@ -157,20 +158,24 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       $list = "";
       $s3FileList = $this->prepareS3FileObject($wpasset->assetDir.$this->audioSubDir);
 
-      $list .=  '<div id="audio-list" class="mmarw-audio"><h4>Audio URLs</h4><ul>';
+      $list .=  '<div id="audio-list" class="mmarw-audio"><h4>Audio URLs</h4>';
+      $list .= '<div id="container-2" class="mmarw-container">';
+      $list .= '<ul>';
 
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
         $list .=  '<li><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
-      $list .= '</ul></div>';
+      $list .= '</ul></div></div>';
       return $list;
     }
 
     private function buildImageList($wpasset=NULL){
       $s3FileList = $this->prepareS3FileObject($wpasset->assetDir.$this->imgSubDir);
       $list = "";
-      $list .= '<div id="image-list" class="mmarw-images"><h4>Images</h4><ul>';
+      $list .= '<div id="image-list" class="mmarw-images"><h4>Images</h4>';
+      $list .= '<div id="container-3" class="mmarw-container">';
+      $list .= '<ul>';
 
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
@@ -181,7 +186,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
 
         $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
-      $list .=  '</ul></div>';
+      $list .=  '</ul></div></div>';
 
       return $list;
     }
@@ -190,7 +195,10 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       $list=""; $class="doc";
 
       $s3FileList = $this->prepareS3FileObject($wpasset->assetDir.$this->docsSubDir);
-      $list .= '<div id="docs-list" class="mmarw-docs"><h4>Documents</h4><ul>';
+      $list .= '<div id="docs-list" class="mmarw-docs"><h4>Documents</h4>';
+      $list .= '<div id="container-4" class="mmarw-container">';
+      $list .= '<ul>';
+
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
 
@@ -203,7 +211,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
 
         $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
-      $list .=  '</ul></div>';
+      $list .=  '</ul></div></div>';
       return $list;
     }
 
@@ -211,6 +219,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       $list = "";
       $s3FileList = $this->prepareS3FileObject( $wpasset->assetDir.$this->vidSubDir);
       $list .= '<div id="embed-code" class="widget"><h4>Video Embed Code</h4>';
+      $list .= '<div id="container-1" class="mmarw-container">';
 
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
@@ -246,7 +255,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
                   </textarea>';
         }
       }
-      $list .= '</div>';
+      $list .= '</div></div>'; // close .mmarw-container & .widget
       return $list;
     }
 

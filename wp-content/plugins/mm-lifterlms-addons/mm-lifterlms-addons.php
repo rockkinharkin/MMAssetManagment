@@ -57,10 +57,10 @@ class MM_LifterLMS_AddOns {
      wp_enqueue_style( 'mmaddon-styles', plugins_url('css/style.css',__FILE__ ) );
      wp_enqueue_script( 'mmaddon-script', plugins_url('js/upload.js',__FILE__ ), ['jquery'], '1.0.0', true );
 
-     // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.your_keyname_1,ajax_object.your_keyname_2 etc..
+     // need to do this so we can access php variables in javascript.
 	   wp_localize_script( 'mmaddon-script', 'ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( "upload_files_nonce" ) ) );
      wp_localize_script( 'mmaddon-script', 'ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( "upload_directory_nonce" ) ) );
-    
+
    }
   }
 

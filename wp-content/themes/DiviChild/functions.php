@@ -4,7 +4,8 @@
 ------------------ ADD YOUR PHP HERE ------------------*/
 
 function divichild_enqueue_scripts() {
-    wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
+    wp_register_style( 'parent-style', get_template_directory_uri() . '/style.css' );
+    wp_enqueue_style( 'parent-style' );
 }
 add_action( 'wp_enqueue_scripts', 'divichild_enqueue_scripts' );
 
@@ -43,6 +44,7 @@ function add_login_logout_link($items, $args) {
     return $items;
 }
 
+// removing the "author" section on the course intro page.
 remove_filter( 'lifterlms_single_course_after_summary', 'lifterlms_template_course_author', 40 );
 
 if ( ! function_exists( 'load_mm_resources_widget' ) ) {
@@ -52,7 +54,6 @@ if ( ! function_exists( 'load_mm_resources_widget' ) ) {
     global $post;
     $p = (array)$post;
     $p['title']="RESOURCES";
-  //  print_r($p);
     $widget = new MM_Asset_Widget();
     $content = $widget->widget(NULL,$p);
     echo __( $content, 'MM_Asset_widget' );
