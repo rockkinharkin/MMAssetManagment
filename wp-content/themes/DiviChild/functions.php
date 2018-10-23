@@ -53,7 +53,6 @@ if ( ! function_exists( 'load_mm_resources_widget' ) ) {
   function load_mm_resources_widget(){
     global $post;
     $p = (array)$post;
-    $p['title']="RESOURCES";
     $widget = new MM_Asset_Widget();
     $content = $widget->widget(NULL,$p);
     echo __( $content, 'MM_Asset_widget' );

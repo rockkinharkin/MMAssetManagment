@@ -17,8 +17,9 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
   class MM_Asset_Widget extends WP_Widget {
 
     function __construct() {
+      $queried_object = get_queried_object();
       $this->requires();
-      $this->hooks();
+      $this->hooks($queried_object->post_type);
 
       $this->s3ResUrl     = BUCKURL;
       $this->audioSubDir  = '/audio/';
@@ -34,18 +35,14 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
   		parent::__construct( 'MM_Asset_Widget', 'MM Asset Widget', $widget_ops );
     }
 
-    public function hooks(){
-      add_action( 'wp_enqueue_scripts', array( $this, 'mm_asset_widget_scripts' ) );
-    }
-
     public function mm_asset_widget_scripts() {
+      // js files
+      // wp_register_script( 'mmawidget-script', plugins_url('js/mmawidget-script.js',__FILE__ ), ['jquery'], '1.0.0', true );
+      // wp_enqueue_script( 'mmawidget-script');
+
        // css files
        wp_register_style( 'mmawidget-styles', plugins_url('css/mmawidget-styles.css',__FILE__ ) );
        wp_enqueue_style( 'mmawidget-styles');
-
-       // js files
-       wp_register_script( 'mmawidget-script', plugins_url('js/mmawidget.js',__FILE__ ), ['jquery','jquery-ui-core','jquery-ui-accordian'], '1.0.0', true );
-       wp_enqueue_script( 'mmawidget-script');
     }
 
   /**
@@ -56,12 +53,14 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
 	 */
     public function widget( $args, $instance ) {
       $content = "";
+
       $queried_object = get_queried_object();
       // setting defaults for $asset items
       $wpasset = new stdClass();
       $wpasset->ID = 0;
       $wpasset->post_name= 'default-asset';
       //$this->s3ResUrl.$wpasset->assetDir.$this->vidSubDir.[filename]
+      if( empty( $instance['title'] ) ){ $instance['title']="RESOURCES"; }
 
       // getting current page widget is displayed on.
       if ( $queried_object ) {
@@ -136,9 +135,13 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       return $instance;
     }
 
-
     //=======================================================================================================//
     //=========================================== HELPER METHODS ==========================================//
+    private function hooks($type=NULL){
+      if( $type == 'course' ){ // only load js files for wodget when inside course pages
+        add_action( 'wp_enqueue_scripts', array( $this, 'mm_asset_widget_scripts' ) );
+      }
+    }
 
     private function requires(){
       if( in_array( 'mm-lifterlms-addons/mm-lifterlms-addons.php', get_option('active_plugins') ) == 1 ){
