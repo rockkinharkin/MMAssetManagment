@@ -30,19 +30,17 @@ jQuery(document).ready( function($)
 
      //make files available
      var fileData = new FormData();
+     var fr = new FileReader();
+
   //   files = input.files[0];
      $(files).each( function(i, file){
        // get file data
-       //var fr = new FileReader();
-       //fr.onload = function() {
-       fileData.append(inputName+'['+i+']', file );
-       // }
-       // fr.readAsDataURL(files[0]);
+      fr.readAsDataURL(file); 
+      $.extend(file,{ "base64":fr.result});
+      fileData.append('files',file);
      });
 
-
-
-    console.log(fileData);
+    console.log(fileData['files']);
 
     fileData.append('action','upload_directory');
     fileData.append('assetid',assetId);

@@ -213,10 +213,10 @@ class MM_LifterLMS_AddOns {
     $assetslug=$_POST['assetslug'];
   //  $files=$_POST['data'];
 
-  error_log(json_encode( $_FILES['vidfiles'] ));
+  error_log("jsonString::".json_encode( $_FILES ));
 
     foreach($_FILES as $f){
-      error_log('filename::'.$f['file']['name']);
+      error_log('filename::'.$f['files']['name']);
     }
 
     if (!function_exists('wp_handle_upload')) {
