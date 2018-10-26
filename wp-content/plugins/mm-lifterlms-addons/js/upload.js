@@ -18,17 +18,75 @@ jQuery(document).ready( function($)
   var ajax_url = ajax_data.ajax_url;
   var assetId = GetURLParameter('course_id');
   var assetSlug = GetURLParameter('course_slug').toString();
-  var filelist = [];
-  var data = { 'action': 'upload_files',  'assetid': assetId, 'assetslug': assetSlug, 'filelist':filelist, 'nonce': ajax_data.nonce };
-  var newdata = { 'action': 'upload_directory', 'assetid': assetId, 'assetslug': assetSlug, 'nonce': ajax_data.nonce };
+  //var filelist = [];
+  //var data = { 'action': 'upload_files',  'assetid': assetId, 'assetslug': assetSlug, 'filelist':filelist, 'nonce': ajax_data.nonce };
 
 // upload full directory to s3.
-  $('#directory-upload').on('click', function(e){
-    filepath = $('input#filepath').val();
-    $.extend( newdata,{ 'filepath':filepath });
-     $.post( ajax_url,newdata,function(response){
-        alert(response);
-      });
+  $('#videoform').submit( function(e){
+    e.preventDefault();
+     //regexp = /^[^[\]]+/;
+     var files = $('#vidfiles')[0].files;
+     var inputName = $('#vidfiles').attr('name');
+
+     //make files available
+     var fileData = new FormData();
+  //   files = input.files[0];
+     $(files).each( function(i, file){
+       // get file data
+       //var fr = new FileReader();
+       //fr.onload = function() {
+       fileData.append(inputName+'['+i+']', file );
+       // }
+       // fr.readAsDataURL(files[0]);
+     });
+
+
+
+    console.log(fileData);
+
+    fileData.append('action','upload_directory');
+    fileData.append('assetid',assetId);
+    fileData.append('assetslug',assetSlug);
+    fileData.append('nonce',ajax_data.nonce);
+
+    $.ajax({
+      type: 'POST',
+      data: fileData,
+      url: ajax_url,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function(fileData){
+          alert(fileData);
+      }
+  });
+  //
+  //   var data = {};
+  //   $.extend(data,{ 'action':'upload_directory',
+  //                 'contentType':false,
+  //                 'processData':false,
+  //                 'assetid':assetId,
+  //                 'assetslug':assetSlug,
+  //                 'data': fileData,
+  //                 'nonce': ajax_data.nonce
+  //               });
+    // data.append('contentType',false);
+    // data.append('processData',false);
+    // data.append('assetid',assetId);
+    // data.append('assetslug',assetSlug);
+    // data.append('nonce',ajax_data.nonce);
+    //   data.append('files',fileData);
+
+
+    //$.extend(fileData,{ 'action': 'upload_directory','assetid': assetId, 'assetslug': assetSlug, 'nonce': ajax_data.nonce });
+
+
+    //fieldata = $('input#vidfiles').prop('files')[0]);
+    // console.log('fileData::'+fileData);
+    // $.extend( data['files'],fileData);
+    // console.log('Final Data Set::'+data);
+  //  $.post( ajax_url, data, function(response){alert(response);} );
+
   });
 
   $('#upload-files').on('click', function(e){

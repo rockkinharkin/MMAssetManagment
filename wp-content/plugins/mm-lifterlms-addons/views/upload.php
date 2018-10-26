@@ -3,9 +3,7 @@
 <!-- video -->
 
   <div class="dropzone" id="dropzone-video">
-
     <div class="col-left" id="vid-leftCol">
-
       <p>Drop video files here for uploading</p>
 
       <ul id="vid-list"></ul>
