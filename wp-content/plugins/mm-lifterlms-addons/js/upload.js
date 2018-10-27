@@ -24,101 +24,62 @@ jQuery(document).ready( function($)
 // upload full directory to s3.
   $('#videoform').submit( function(e){
     e.preventDefault();
-     //regexp = /^[^[\]]+/;
+
      var files = $('#vidfiles')[0].files;
      var inputName = $('#vidfiles').attr('name');
+     var fileData = { 'action':'upload_directory',
+                    'contentType':false,
+                    'processData':false,
+                    'assetid':assetId,
+                    'assetslug':assetSlug,
+                    'nonce': ajax_data.nonce };
 
      //make files available
-     var fileData = new FormData();
-     var fr = new FileReader();
-
-  //   files = input.files[0];
      $(files).each( function(i, file){
        // get file data
-      fr.readAsDataURL(file); 
-      $.extend(file,{ "base64":fr.result});
-      fileData.append('files',file);
+       fr = new FileReader();
+       fr.readAsDataURL(file);
+       $.extend(file,{ "base64":fr.result }); // add the files data string to the file object.
      });
+     $.extend(fileData, {'filelist':files }); // add file list to the ajax post data set
 
-    console.log(fileData['files']);
-
-    fileData.append('action','upload_directory');
-    fileData.append('assetid',assetId);
-    fileData.append('assetslug',assetSlug);
-    fileData.append('nonce',ajax_data.nonce);
-
-    $.ajax({
-      type: 'POST',
-      data: fileData,
-      url: ajax_url,
-      cache: false,
-      contentType: false,
-      processData: false,
-      success: function(fileData){
-          alert(fileData);
-      }
+     $.post( ajax_url, fileData, function(response){ // send data to server for s3 upload
+          alert(response);
+     });
   });
+
+  // $('#upload-files').on('click', function(e){
+  //   // images
+  //   imgs=[]; docs=[]; vids=[]; aud=[];
   //
-  //   var data = {};
-  //   $.extend(data,{ 'action':'upload_directory',
-  //                 'contentType':false,
-  //                 'processData':false,
-  //                 'assetid':assetId,
-  //                 'assetslug':assetSlug,
-  //                 'data': fileData,
-  //                 'nonce': ajax_data.nonce
-  //               });
-    // data.append('contentType',false);
-    // data.append('processData',false);
-    // data.append('assetid',assetId);
-    // data.append('assetslug',assetSlug);
-    // data.append('nonce',ajax_data.nonce);
-    //   data.append('files',fileData);
-
-
-    //$.extend(fileData,{ 'action': 'upload_directory','assetid': assetId, 'assetslug': assetSlug, 'nonce': ajax_data.nonce });
-
-
-    //fieldata = $('input#vidfiles').prop('files')[0]);
-    // console.log('fileData::'+fileData);
-    // $.extend( data['files'],fileData);
-    // console.log('Final Data Set::'+data);
-  //  $.post( ajax_url, data, function(response){alert(response);} );
-
-  });
-
-  $('#upload-files').on('click', function(e){
-    // images
-    imgs=[]; docs=[]; vids=[]; aud=[];
-
-    $('.imgfile').each(function(e){
-      ival = $(this).val();
-      imgs.push(ival);
-    });
-    // documents
-    $('.docfile').each(function(e){
-      dval = $(this).val();
-      docs.push(dval);
-    });
-    // audio
-    $('.audfile').each(function(e){
-      aval = $(this).val();
-      aud.push(aval);
-    });
-    // video
-    $('.vidfile').each(function(e){
-      vidval = $(this).val();
-      vids.push(vidval);
-    });
-
-    filelist.push({ 'images':imgs, 'docs':docs,'audio':aud,'videos':vids });
-    // add object to data variable for bulk upload
-    $.extend( data['filelist'],filelist);
-    console.log($(data));
-    $.post( ajax_url,data,function(response){
-        alert(response);
-     });
-  });
+  //   $('.imgfile').each(function(e){
+  //     ival = $(this).val();
+  //     imgs.push(ival);
+  //   });
+  //   // documents
+  //   $('.docfile').each(function(e){
+  //     dval = $(this).val();
+  //     docs.push(dval);
+  //   });
+  //   // audio
+  //   $('.audfile').each(function(e){
+  //     aval = $(this).val();
+  //     aud.push(aval);
+  //   });
+  //   // video
+  //   $('.vidfile').each(function(e){
+  //     vidval = $(this).val();
+  //     vids.push(vidval);
+  //   });
+  //
+  //   filelist.push({ 'images':imgs, 'docs':docs,'audio':aud,'videos':vids });
+  //   // add object to data variable for bulk upload
+  //   $.extend( data['filelist'],filelist);
+  //   console.log($(data));
+  //   $.post( ajax_url,data,function(response){
+  //       alert(response);
+  //    });
+  // });
 
 // The Uploader
   // $.event.props.push('dataTransfer');

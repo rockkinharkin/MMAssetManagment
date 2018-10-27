@@ -1,3 +1,45 @@
+///=====second last attempt ///====
+
+// add to fileData['filelist']
+
+//   console.log(files);
+//var fileData = new FormData();
+
+
+// fileData.append('action','upload_directory');
+// fileData.append('assetid',assetId);
+// fileData.append('assetslug',assetSlug);
+// fileData.append('nonce',ajax_data.nonce);
+
+
+//
+//   var data = {};
+//   $.extend(data,{ 'action':'upload_directory',
+//                 'contentType':false,
+//                 'processData':false,
+//                 'assetid':assetId,
+//                 'assetslug':assetSlug,
+//                 'data': fileData,
+//                 'nonce': ajax_data.nonce
+//               });
+  // data.append('contentType',false);
+  // data.append('processData',false);
+  // data.append('assetid',assetId);
+  // data.append('assetslug',assetSlug);
+  // data.append('nonce',ajax_data.nonce);
+  //   data.append('files',fileData);
+
+
+  //$.extend(fileData,{ 'action': 'upload_directory','assetid': assetId, 'assetslug': assetSlug, 'nonce': ajax_data.nonce });
+
+
+  //fieldata = $('input#vidfiles').prop('files')[0]);
+  // console.log('fileData::'+fileData);
+  // $.extend( data['files'],fileData);
+  // console.log('Final Data Set::'+data);
+//  $.post( ajax_url, data, function(response){alert(response);} );
+///======================last attempt======//
+///===========================First attempt at uploader =======////
 // build file list object for upload
 // //  $('.dropzone li.file').each(function(){
 // //    filename = $(this).attr('id');
