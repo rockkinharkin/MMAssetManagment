@@ -153,14 +153,26 @@ class MM_LifterLMS_AddOns {
   public function upload_files(){
     check_ajax_referer( 'upload_files_nonce', 'nonce' ); // verifies the call to function
 
+    // $file = new stdClass;
+    //  $file->name = basename($headers['X-File-Name']);
+    //  $file->size = $headers['X-File-Size'];
+    //  $file->content = file_get_contents("php://input");
+
+     // // if everything is ok, save the file somewhere
+     // if(file_put_contents('files/'.$file->name, $file->content))
+     //     exit('OK');
+
+    error_log('inside UPLOAD_FILES'.print_r($_FILES,true));
+
     $assetid=$_POST['assetid'];
     $assetslug=$_POST['assetslug'];
-    $files= $_FILES['images']; // array of arrays
+    $files= $_FILES['files']; // array of arrays
 
     $aws = new AWS_GetResources;
 
     $count = 0;
     foreach( $files as $file ){
+      error_log("uploadFiles::".print_r($file,true));
       $aws->standardUpload($assetid,$assetslug,$file);
      $count++;
     }
@@ -175,7 +187,7 @@ class MM_LifterLMS_AddOns {
 
     error_log("FILES:::".print_r($_FILES,true));
 
-    error_log(print_r($_POST['images'],true));
+  //  error_log(print_r($_POST['files'],true));
 
      $aws = new AWS_GetResources;
     $assetid=$_POST['assetid'];

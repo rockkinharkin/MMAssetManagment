@@ -60,8 +60,7 @@ $filename=NULL,$filedata=NULL
     $filename = preg_replace('/^.+\\\\/', '', $filepath);
 
     error_log($assetid.'<br><br>'.$assetslug);
-    die();
-
+    
     $filetype = $this->checkFileType($filename);
     $newfilename = $assetid.'_'.$assetslug.'_'.$filename;
 
