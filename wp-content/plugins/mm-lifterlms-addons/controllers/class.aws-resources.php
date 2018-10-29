@@ -46,14 +46,14 @@ class AWS_GetResources{
 
 /*
 @Function Name: standardUpload()
-@vars: [ $action=NULL, $assetid=0, $assetslug=NULL, $base64=NULL,$filename=NULL ]
+@vars: [ $action=NULL, $assetid=0, $assetslug=NULL, $fileObj=NULL ]
 @Description: standard upload function or all files below 4.99GB. @Function LargeUploder()
 should be used for files over 4.99 GB - as they require the aws part uploader.
 command line for php upload.
 php aws s3 cp '. $file['path'].$file['filename'].' s3://my-first-backup-bucket/
 $filename=NULL,$filedata=NULL
 */
-  public function standardUpload($assetid=0, $assetslug=NULL,$filepath){
+  public function standardUpload($assetid=0, $assetslug=NULL,$fileObj){
 
     $result   = NULL;
     $keyName  = $assetid.'_'.$assetslug;

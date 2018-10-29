@@ -22,30 +22,61 @@ jQuery(document).ready( function($)
   //var data = { 'action': 'upload_files',  'assetid': assetId, 'assetslug': assetSlug, 'filelist':filelist, 'nonce': ajax_data.nonce };
 
 // upload full directory to s3.
-  $('#videoform').submit( function(e){
+  var ifiles = [];
+  $('#videoform').on('change', function(e){
+    var files = e.target.files;
+    $(files).each( function(i, file){
+
+      fr = new FileReader(file); // need file reader to get base64 of file
+      fr.readAsDataURL(file);
+      $.extend(file,{"base64":fr.result}); // add base64 data string to file object
+
+      ifiles.push(file); // add file into the ifiles array for sending in request
+    });
+
+  });
+  $('button#directory-upload').on('click',function(e){
     e.preventDefault();
-
-     var files = $('#vidfiles')[0].files;
-     var inputName = $('#vidfiles').attr('name');
-     var fileData = { 'action':'upload_directory',
-                    'contentType':false,
-                    'processData':false,
-                    'assetid':assetId,
-                    'assetslug':assetSlug,
-                    'nonce': ajax_data.nonce };
-
-     //make files available
-     $(files).each( function(i, file){
-       // get file data
-       fr = new FileReader();
-       fr.readAsDataURL(file);
-       $.extend(file,{ "base64":fr.result }); // add the files data string to the file object.
-     });
-     $.extend(fileData, {'filelist':files }); // add file list to the ajax post data set
-
-     $.post( ajax_url, fileData, function(response){ // send data to server for s3 upload
-          alert(response);
-     });
+    formdata = new FormData();
+    formdata.append('files', ifiles[0]);
+    formdata.append('action', 'upload_files');
+    formdata.append('assetid',assetId,);
+    formdata.append('assetslug',assetSlug);
+    formdata.append('nonce', ajax_data.nonce);
+    // foorm
+    //  var files = $('#vidfiles')[0].files;
+    //  var inputName = $('#vidfiles').attr('name');
+    //  var fileData = { 'action':'upload_directory',
+    //                 'contentType':false,
+    //                 'processData':false,
+    //                 'assetid':assetId,
+    //                 'assetslug':assetSlug,
+    //                 'files': [],
+    //                 'nonce': ajax_data.nonce };
+    //  //make files available
+    //
+    //    $(files).each( function(i, file){
+    //      // get file data
+    //      fr = new FileReader(file); // need file reader to get base64 of video / audio
+    //      fr.readAsDataURL(file);
+    //      $.extend(file,{ "base64":fr.result }); // add the files data string to the file object.
+    //    });
+    //  $.extend(fileData, { 'files': files}); // add file list to the ajax post data set
+    var request = new XMLHttpRequest();
+    request.open('post','admin-ajax.php',true);
+  //  request.setRequestHeader("content-type","application/x-www-form-urlencoded");
+    request.send(formdata);
+    // request.onreadystatechange = function(){
+    //   if(request.readyState == 4 && request.status == 200){
+    //     var returndata = request.responseText;
+    //     $('#dropzone-video').html('<div><h3>'+returndata+'</h3></div>');
+    //   }
+    // }
+     // $.post( ajax_url,
+     //        formdata,
+     //        function(request.responseText){ // send data to server for s3 upload
+     //          alert(response);
+     //        });
   });
 
   // $('#upload-files').on('click', function(e){
