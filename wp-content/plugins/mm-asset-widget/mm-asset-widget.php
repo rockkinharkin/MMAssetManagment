@@ -143,12 +143,9 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
     }
 
     private function requires(){
-      if( in_array( 'mm-lifterlms-addons/mm-lifterlms-addons.php', get_option('active_plugins') ) == 1 ){
-        $mmAddOns = new MM_LifterLMS_AddOns();
-        $mmAddOns->aws_requires();
-      }
-      require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/llms-memberships.php'; // to check memberships#
-      //require_once ABSPATH.'wp-content/plugins/mm-asset-widget/inc/shortcodes.php';
+      require_once ABSPATH.'wp-content/plugins/mm-asset-widget/config.php';
+      require_once ABSPATH.'wp-content/plugins/mm-asset-widget/classes/class.aws-resources.php'; // to check memberships#
+      require_once ABSPATH.'wp-content/plugins/mm-asset-widget/classes/class.llms-memberships.php'; // to check memberships#
     }
 
     private function prepareS3FileObject($folder=NULL){
@@ -251,7 +248,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
               $list .= '<h5>'.$meta->display_fileName.'</h5>
                   <textarea id="video-'.$wpasset->ID.'">
                     <video width="320" height="240" controls>
-                    <source src="'.BUCKURL.'/'.$meta->fullpath_without_file_extension.'.'.$type.' type="video/'.$type.'">
+                    <source src="'.$this->s3ResUrl.'/'.$meta->fullpath_without_file_extension.'.'.$type.' type="video/'.$type.'">
                     Your browser does not support the video tag. Please find the correct browser for support of this video tag here: https://www.w3schools.com/html/html5_video.asp
                     </video>
                   </textarea>';
