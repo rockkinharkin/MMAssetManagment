@@ -15,12 +15,10 @@ class MM_Shortcodes{
   }
 
   public function checkLicence($userid,$assetid){
-    echo "check licence function";
     $member = new MM_Assets_LLMS_Memberships();
     if(  $member->isUserEnrolled($userid,$assetid) == 'is-enrolled' ){
         $url = BUCKURL.'/'.$this->filesrc;
         return $url;
-        //return wp_redirect($url); exit;
     }
   }
 
@@ -31,7 +29,7 @@ class MM_Shortcodes{
 
   private function requires(){
     require_once ABSPATH.'wp-content/plugins/mm-lifter-lms-addons/config.php';
-    require_once ABSPATH.'wp-content/plugins/mm-lifter-lms-addons/controllers/class.llms-memberships.php'; // to check memberships#
+    require_once ABSPATH.'wp-content/plugins/mm-lifter-lms-addons/classes/class.llms-memberships.php'; // to check memberships#
   }
 } // end class
 ?>

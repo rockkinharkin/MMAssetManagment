@@ -1,7 +1,7 @@
 <?php
 
-$AWS_SECRET_ACCESS_KEY = 'XJi2WaAkMxw+HHKk2R3nBwwCZIoZbwmL/ASeLz8s';
-$AWS_REGION = 'eu-west-1';
+$AWS_SECRET_ACCESS_KEY = '';
+$AWS_REGION = '';
 
 //the data is correct here use them
 $to_sign = $_GET["to_sign"];

@@ -1,0 +1,50 @@
+.main-contanier {
+  font: #333 middle;
+  font-family: "Helvetica";
+  margin-top: 1em;
+  padding:1em;
+  text-align: center;
+  width: 100%;
+}
+
+.dropzone {
+  color:#aaa;
+  padding:1em;
+  background-color: white;
+  margin:5px;
+  width: 90%;
+}
+.dropzone.highlight{
+  background-color: lightBlue;
+}
+
+.dropzone img {
+  text-align:left;
+  width:10%;
+}
+.dropzone img.video{
+  background-image: url('./css/icons/video-icon.svg');
+}
+.dropzone img.audio{
+  background-image: url('./css/icons/audio-icon.svg');
+}
+.dropzone img.docs{
+  background-image: url('./css/icons/file-icon.svg');
+}
+.dropzone p {
+  font-size: 1.5em;
+  padding-top: 1em;
+  margin:0;
+}
+.dropzone .file{
+  font-size:0.5em;
+}
+.dropzone .col-left{
+  width:70%;
+  float:right;
+  text-align: left;
+}
+.dropzone .col-right{
+  width:50%;
+  display:inline;
+}
