@@ -64,15 +64,6 @@ class MM_LifterLMS_AddOns {
     return false;
   }
 
-
-  /* Meta Display callback
-   @param WP_Post $post Current post object.
-   */
-   public function wpdocs_my_display_callback( $post ) {
-     echo "<div><h2>hello<h2></div>";
-      // Display code/markup goes here. Don't forget to include nonces!
-  }
-
   public function build_course_assets_meta_box( $post ){
       wp_nonce_field( basename( __FILE__ ), 'mm_course_assets_meta_box_nonce' );
 

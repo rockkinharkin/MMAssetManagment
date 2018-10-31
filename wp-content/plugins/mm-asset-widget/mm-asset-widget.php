@@ -82,18 +82,19 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
             if ( ! empty( $title ) ){
               echo $args['before_title'] . $title . $args['after_title'];
             }
+            $content .= '<div id="mm-asset-widget">';
             $content .= '<div class="mm-container">';
             $content .= $this->buildVideoList($wpasset);
             $content .= $this->buildAudioList($wpasset);
             $content .= $this->buildImageList($wpasset);
             $content .= $this->buildDocsList($wpasset);
-            $content .= '</div>';
           }else{
             $content .= '<div class="widget" id="message"><br><p>Purchase a licence and gain further access to more resources for this course.</p>';
             $content .= '<br><a class="llms-button-action button" href="/become-a-member">I WANT A LICENCE</a></div>';
         }
       }
-      echo __( $content, 'MM_Asset_widget' );
+      $content .= '</div>';
+      echo __( $content, 'MM_Asset_Widget' );
       echo $args['after_widget'];
     }
 
@@ -109,7 +110,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
         $title = $instance[ 'title' ];
       }
       else {
-      $title = __( 'New title', 'MM_Asset_widget' );
+      $title = __( 'New title', 'MM_Asset_Widget' );
       }
     // Widget admin form
     ?>
@@ -157,13 +158,15 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       $list = "";
       $s3FileList = $this->prepareS3FileObject($wpasset->assetDir.$this->audioSubDir);
 
-      $list .=  '<div id="audio-list" class="mmarw-audio"><h4>Audio URLs</h4>';
+      $list .=  '<div id="audio-list" class="item-list"><h4>Audio URLs<span class="list-open">+</span></h4>';
       $list .= '<div id="container-2" class="mmarw-container">';
       $list .= '<ul>';
 
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
-        $list .=  '<li><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
+        $type = pathinfo($meta->file);
+
+        $list .=  '<li><span class="type">'.$type['extension'].'</span><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
       $list .= '</ul></div></div>';
       return $list;
@@ -172,18 +175,19 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
     private function buildImageList($wpasset=NULL){
       $s3FileList = $this->prepareS3FileObject($wpasset->assetDir.$this->imgSubDir);
       $list = "";
-      $list .= '<div id="image-list" class="mmarw-images"><h4>Images</h4>';
+      $list .= '<div id="image-list" class="item-list"><h4>Images<span class="list-open">+</span></h4>';
       $list .= '<div id="container-3" class="mmarw-container">';
       $list .= '<ul>';
 
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
+        $type = pathinfo($meta->file);
         if( strpos( $meta->file,'png') !== false ){ $class ='png'; }
         if( ( strpos( $meta->file,'jpeg') !== false ) || ( strpos( $meta->file,'jpg') !== false) ){ $class ='jpg';}
         if( strpos( $meta->file,'gif') !== false ){ $class ='gif';}
         if( strpos( $meta->file,'tiff')!== false ){ $class ='tiff';}
 
-        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
+        $list .=  '<li class="'.$class.'"><span class="type">'.$type['extension'].'</span><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
       $list .=  '</ul></div></div>';
 
@@ -194,13 +198,13 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       $list=""; $class="doc";
 
       $s3FileList = $this->prepareS3FileObject($wpasset->assetDir.$this->docsSubDir);
-      $list .= '<div id="docs-list" class="mmarw-docs"><h4>Documents</h4>';
+      $list .= '<div id="docs-list" class="item-list"><h4>Documents<span class="list-open">+</span></h4>';
       $list .= '<div id="container-4" class="mmarw-container">';
       $list .= '<ul>';
 
       foreach ( $s3FileList as $a ){
         $meta = $this->buildAssetMeta($a);
-
+        $type = pathinfo($meta->file);
         if( strpos( $meta->file,'docx')!== false ){ $class ='doc';}
         if( strpos( $meta->file,'pdf') !== false ){ $class ='pdf';}
         if( strpos( $meta->file,'odt')!== false ){ $class ='odt';}
@@ -208,7 +212,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
         if( strpos( $meta->file,'txt')!== false ){ $class ='txt';}
         if( strpos( $meta->file,'rtf')!== false ){ $class ='rtf';}
 
-        $list .=  '<li class="'.$class.'"><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
+        $list .=  '<li class="'.$class.'"><span class="type">'.$type['extension'].'</span><a href="'.$this->s3ResUrl.'/'.$meta->full_path.'">'.$meta->display_fileName.'</a></li>';
       }
       $list .=  '</ul></div></div>';
       return $list;
@@ -217,7 +221,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
     private function buildVideoList($wpasset=NULL){
       $list = "";
       $s3FileList = $this->prepareS3FileObject( $wpasset->assetDir.$this->vidSubDir);
-      $list .= '<div id="embed-code" class="widget"><h4>Video Embed Code</h4>';
+      $list .= '<div id="video-list" class="item-list"><h4>Video Embed Code<span class="list-open">+</span></h4>';
       $list .= '<div id="container-1" class="mmarw-container">';
 
       foreach ( $s3FileList as $a ){

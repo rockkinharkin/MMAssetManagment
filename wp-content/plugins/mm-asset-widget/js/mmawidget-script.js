@@ -1,8 +1,17 @@
 jQuery(document).ready(function($){
+   host = window.location.host;
+
   $('.mmarw-container').hide();
 
-  $('#embed-code').on('click', function(){
-   $('#embed-code .mmarw-container').toggle("slow");
+  $('.item-class').on('click', function(){
+    $(this).each(function(ob){
+      $(ob+' h4').addClass('down-arrow');
+    });
+  });
+
+
+  $('#video-list').on('click', function(){
+   $('#video-list .mmarw-container').toggle("slow");
   });
 
   $('#audio-list').on('click', function(){

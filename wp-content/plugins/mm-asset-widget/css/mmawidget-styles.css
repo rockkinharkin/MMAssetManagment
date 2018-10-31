@@ -1,57 +1,48 @@
-.MM_Asset_Widget .widgettitle{
+.MM_Asset_Widget .widgettitle {
   border-bottom: 3px solid #EA006D;
   text-align: center;
 }
 .MM_Asset_Widget .mm-container{
   margin-top:0.5em;
 }
-.MM_Asset_Widget h4{
+
+#mm-asset-widget {
+  background-color: rgb(220,220,220, 0.4);/* rgb(247,19,143, 0.5); #F7138F */
+  padding:0.5em;
+}
+#mm-asset-widget .item-list h4{
   font-weight:bold;
 }
-.mmarw-docs ul li:before,
-.mmarw-images ul li:before {
+#mm-asset-widget .item-list h4 span{
+  background-color: #F7138F;
+  color: white;
+  font-size: 0.7em;
+  padding: 0em 0.2em;
+  margin-left: 1em;
+}
+#mm-asset-widget .item-list span.type{
+  color:#F7138F;
+  font-size: 0.5em;
+  text-transform: uppercase;
+  margin-left:0.5em;
+}
+
+#mm-asset-widget .item-list ul{
+  padding:0;
+}
+#mm-asset-widget .item-list li{
+  list-style: none;
+}
+#mm-asset-widget .item-list li a{
+  font-size:0.7em;
+  margin-left: 0.5em;
+}
+.mmarw-docs ul li::before,
+.mmarw-images ul li::before {
   padding:0.5em;
   background-color: #eee;
   color: #333;
   border-radius: 0.5em;
   font-size: 0.7em;
   margin-right: 0.5em;
-}
-
-.pdf:before {
-  content: "PDF";
-}
-
-.doc:before {
-   content: "DOC";
-}
-
-.odt:before {
-   content: "ODT";
-}
-
-.xls:before {
-   content: "XLS";
-}
-.txt:before {
-   content: "TXT";
-}
-.rtf:before {
-   content: "RTF";
-}
-
-/* images **/
-.jpg:before {
-   content: "JPG";
-}
-
-.gif:before {
-   content: "GIF";
-}
-
-.tiff:before {
-   content: "TIFF";
-}
-.png:before {
-   content: "PNG";
 }
