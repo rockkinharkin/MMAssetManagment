@@ -15,9 +15,6 @@
 
 defined( 'ABSPATH' ) or die ('Unauthorised Access');
 
-use Aws\S3\S3Client;
-use Aws\S3\Exception\S3Exception;
-
 $plugin = new MM_LifterLMS_AddOns();
 $plugin->__construct();
 
@@ -31,7 +28,7 @@ class MM_LifterLMS_AddOns {
   }
 
   public function aws_requires(){
-    require_once  ABSPATH.'vendor/autoload.php';
+    //require_once  ABSPATH.'vendor/autoload.php';
     require_once ABSPATH.'wp-content/plugins/mm-lifterlms-addons/config.php';
   }
 
