@@ -15,6 +15,12 @@
 
 defined( 'ABSPATH' ) or die ('Unauthorised Access');
 
+use Aws\S3\S3Client;
+use Aws\S3\Exception\S3Exception;
+
+$plugin = new MM_LifterLMS_AddOns();
+$plugin->__construct();
+
 class MM_LifterLMS_AddOns {
 
   function __construct(){
@@ -25,7 +31,7 @@ class MM_LifterLMS_AddOns {
   }
 
   public function aws_requires(){
-    require  ABSPATH.'vendor/autoload.php';
+    require_once  ABSPATH.'vendor/autoload.php';
     require_once ABSPATH.'wp-content/plugins/mm-lifterlms-addons/config.php';
   }
 
@@ -36,7 +42,7 @@ class MM_LifterLMS_AddOns {
   private function hooks(){
       add_action( 'admin_enqueue_scripts', array($this,'load_custom_wp_admin_scripts' ));
       add_action( 'add_meta_boxes', array($this,'wpdocs_register_meta_boxes' ));
-      add_action( 'save_post', array($this,'wpdocs_save_meta_box' ));
+    //  add_action( 'save_post', array($this,'wpdocs_save_meta_box' ));
       add_action( 'admin_menu', array($this,'mm_upload_asset_register' )); // Upload Asset View
   }
 
@@ -57,11 +63,16 @@ class MM_LifterLMS_AddOns {
   // /**
   //  * Register meta box(es).
   //  */
-  public function wpdocs_register_meta_boxes() {
-    if( $this->exists == 1 ){
+  public function wpdocs_register_meta_boxes($post) {
+  //  if( $this->exists == 1 ){
       add_meta_box( 'mm-course-assets', __( 'Course Assets', 'mm-lifterlms-addons' ), array($this,'build_course_assets_meta_box'), 'course','side' );
-    }
+  //  }
     return false;
+  }
+
+  public function wpdocs_my_display_callback( $post ) {
+    echo "<div><h2>hello<h2></div>";
+   // Display code/markup goes here. Don't forget to include nonces!
   }
 
   public function build_course_assets_meta_box( $post ){
@@ -76,14 +87,15 @@ class MM_LifterLMS_AddOns {
   	                     </div>
   		            </div>';
     }
+
     /**
      * Save meta box content.
      *
      * @param int $post_id Post ID
      */
-    public function wpdocs_save_meta_box( $post_id ) {
-        // Save logic goes here. Don't forget to include nonce checks!
-    }
+    // public function wpdocs_save_meta_box( $post_id ) {
+    //     // Save logic goes here. Don't forget to include nonce checks!
+    // }
 
 
   public function mm_upload_asset_register()
@@ -95,8 +107,8 @@ class MM_LifterLMS_AddOns {
           'mm-upload-asset',     // menu slug
           array($this,'mm_upload_asset_view') // callback function
       );
-
   }
+
   public function mm_upload_asset_view(){
       global $title;
       $post = get_post($_GET['course_id']);
@@ -106,9 +118,10 @@ class MM_LifterLMS_AddOns {
 
       $file = plugin_dir_path( __FILE__ ) . "/uploader/index.php";
 
-      if ( file_exists( $file ) )
+      if ( file_exists( $file ) ){
           require $file;
       echo '</div>';
   }
+}
 }
 ?>

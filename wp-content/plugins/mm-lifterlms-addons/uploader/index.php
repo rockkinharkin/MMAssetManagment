@@ -1,4 +1,4 @@
-<?php defined( 'ABSPATH' ) or die ('Unauthorised Access');
+<?php
 $assetId=$_GET['course_id'];
 $courseslug = $_GET['course_slug'];?>
 
