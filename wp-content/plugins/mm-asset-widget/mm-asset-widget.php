@@ -20,7 +20,7 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
       $this->requires();
       $this->hooks();
 
-      $this->s3ResUrl     = BUCKURL;
+      $this->s3ResUrl     = BUCURL;
       $this->audioSubDir  = '/audio/';
       $this->imgSubDir    = '/images/';
       $this->docsSubDir   = '/docs/';
@@ -272,13 +272,17 @@ add_action( 'widgets_init', function(){	register_widget( 'MM_Asset_Widget' ); } 
 
       if( isset( $s3asset['Key'] ) &&  ( strpos( $s3asset['Key'],"_" ) !== false ) ){ // need this check to prevent "undefined offset: 1" error when the character doesnt exist in the string using the 'explode' function.
 
-        list( $meta->asset_id, $file )                          = explode( '_', $s3asset['Key'], 2 ); // array of strings [ assetid, filename,]
-        $fname                                                  = explode( '/', $file );
-        list( $assetId, $fileId,$meta->display_fileName,$date ) = explode( '_', $fname[2] );
+        // we bind the returning results to the listed variables with the "list" method.
+        list( $meta->asset_id, $file ) = explode( '_', $s3asset['Key'], 2 ); // array of strings [ assetid, filename,]
+        $fname = explode( '/', $file );
+        list( $assetId,
+              $fileId,
+              $meta->display_fileName ) = explode( '_', $fname[2] );
 
         $meta->file            = $fname[2];
         $meta->coursename_slug = $fname[0];
         $meta->nice_coursename = str_replace( '-',' ',$fname[0] );
+
       }
       return $meta;
     }

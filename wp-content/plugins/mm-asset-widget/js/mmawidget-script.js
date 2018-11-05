@@ -9,7 +9,6 @@ jQuery(document).ready(function($){
     });
   });
 
-
   $('#video-list').on('click', function(){
    $('#video-list .mmarw-container').toggle("slow");
   });

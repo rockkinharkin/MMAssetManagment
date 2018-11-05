@@ -8,19 +8,28 @@ $courseslug = $_GET['course_slug'];?>
   <p>The naming convention for the file structure on the s3 bucket is as follows:
     <ul>
       <li><span class="highlight">Parent Directory:</span> {courseid}_{course-name}/</li>
-      <li><span class="highlight">Sub-directories:</span> videos/, audio/, images/, docs/</li>
-      <li><span class="highlight">Filenames:</span> {uniqueId}-{filename.extension}. The "uniqueId is created automatically when the upload occurs.</li>
+      <li><span class="highlight">Sub-directories:</span> videos/ audio/ images/ docs/ other_resources/</li>
+      <li><span class="highlight">Filenames:</span> {assetId}_{uniqueId}_{your-file-name.(extension)}. The "assetId and uniqueId are created automatically when the upload occurs.</li>
     </ul>
     <div id="needToKnow">
       <h3>Automation</h3>
       <p>The uploader will automatically detect the file type and place the file in the appropriate directory. If
       the directory does not exist one will be generated automatically.</p>
+
+      <h3>AWS Asset Location</h3>
+      <p>The assets can be found here: https://s3.console.aws.amazon.com/s3/buckets/courses.makematic.com.
+      <br> Please note you must have s3 access priviledges to access this directly.</p>
     </div>
 </div>
 
-  <div class="form">
-    <label>Choose your files to upload</label>
-    <input type="file" id="files" multiple="multiple" />
+  <div class="form subcontainer dropzone" id="fileuploader">
+    <input type="file" id="files" multiple="multiple" class="inputfile"/>
+      <label for="files">Choose files for upload</label>
+  </div>
+
+  <div class="subcontainer" id="uploadlog">
+    <h3> File upload Log</h3>
+    <div id="log"></div>
   </div>
 
 <script language="javascript">
@@ -64,18 +73,20 @@ Evaporate.create({
     fileInput.onchange = function(evt) {
       var files = evt.target.files;
       for (var i = 0; i < files.length; i++) {
-
+        jQuery('#log').append('<p>Loading: '+files[i].name+'</p>');
           console.log("filetype::"+files[i].type);
          var directory = whatDirectory(files[i].type);
         // determine directory upload_directory
         var promise = _e_.add({
-          name: assetId+'_'+assetSlug+'/'+directory+'/'+Math.floor(1000000000*Math.random())+'-'+files[i].name, // just changed this last night.
+          name: assetId+'_'+assetSlug+'/'+directory+'/'+assetId+'_'+Math.floor(1000000000*Math.random())+'_'+files[i].name, // just changed this last night.
           file: files[i],
           progress: function (progress) {
-            console.log('making progress: ' + progress);
+            jQuery('#log').append('<p>making progress...'+progress+'</p>');
+            console.log('making progress... ' + progress);
           }
         })
         .then(function (awsKey) {
+          jQuery('#log').append('<p>'+awsKey+' -  file upload complete!</p>');
           console.log(awsKey, 'complete!');
         });
         filePromises.push(promise);
@@ -84,8 +95,10 @@ Evaporate.create({
       // Wait until all promises are complete
       Promise.all(filePromises)
         .then(function () {
+          jQuery('#log').append('<p>All files were uploaded successfully!</p>');
           console.log('All files were uploaded successfully.');
         }, function (reason) {
+          jQuery('#log').append('<p>Files were not uploaded successfully. '+reason+'</p>');
           console.log('All files were not uploaded successfully:', reason);
         });
 
@@ -96,6 +109,7 @@ Evaporate.create({
 
   // Failed to create new instance of evaporate
   function failure(reason) {
+    jQuery('#log').append('Evaporate failed to initialize: '+reason+'</p>');
      console.log('Evaporate failed to initialize: ', reason)
   }
 );
